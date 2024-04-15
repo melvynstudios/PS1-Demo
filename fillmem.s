@@ -8,11 +8,11 @@ BASE_ADDR equ 0x0000
 Main:
 	li $t0, 0xA000      ; $t0 = 0xA000
 	li $t1, 0xA0FF      ; $t1 = 0xA0FF
-	li $t2, 0x11        ; $t2 = 0x11
+	li $t2, 0x12345678  ; $t2 = 0x11
 
 Loop:
-	sb   $t2, BASE_ADDR($t0)
-	addi $t0, $t0, 1
+	sw   $t2, BASE_ADDR($t0)
+	addi $t0, $t0, 4
 	ble  $t0, $t1, Loop
 
 End:
