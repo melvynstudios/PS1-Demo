@@ -13,7 +13,7 @@ Main:
 Loop:
 	sb   $t2, BASE_ADDR($t0)
 	addi $t0, $t0, 1
-	blt  $t0, $t1, Loop
+	ble  $t0, $t1, Loop
 
 End:
 
