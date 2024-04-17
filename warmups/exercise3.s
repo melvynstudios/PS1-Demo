@@ -24,11 +24,14 @@ Main:
 	li $t1, 3
 	li $t2, 0 ; this represents result
 
-Loop:
-	sub $t0, $t0, $t1
-	addi $t2, $t2, 1
-	blt $t0, $t1, Loop
-
+While:
+	blt $t0, $t1, EndWhile   ; If $t0 < $t1, end while
+	nop
+	subu $t0, $t0, $t1
+	addiu $t2, $t2, 1
+	b While	                 ; Unconditional Branch to While label above
+	nop
+EndWhile:
 
 End:
 .close

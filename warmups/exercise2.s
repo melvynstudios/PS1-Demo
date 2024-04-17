@@ -16,5 +16,7 @@ Loop:
 	addi $t1, $t1, 1
 	;Keep adding and accumulating all values of $t0 inside of $t1
 	ble $t0, 10, Loop
+	nop
+
 End:
 .close
