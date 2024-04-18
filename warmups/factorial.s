@@ -1,6 +1,6 @@
 .psx
 .create "factorial.bin", 0x80010000
-.org 0x8001000
+.org 0x80010000
 
 Main:
 	li $a0, 6
