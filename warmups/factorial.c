@@ -1,13 +1,10 @@
 #include <stdio.h>
 
-int main() {
-	int num;
-	int i;
-	int j;
-	int temp;
-	int sum;
-
-	num = 5;
+int factorial(int num) {
+	int i;     // $t1
+	int j;     // $t2
+	int temp;  // $t3
+	int sum;   // $t4
 
 	temp = 1;
 	sum = 1;
@@ -23,6 +20,10 @@ int main() {
 		i++;
 	}
 
-	printf("fac(%d) = %d\n", num, temp);
+	return sum;
+}
+
+int main() {
+	printf("fac(%d) = %d\n", 6, factorial(6));
 	return 0;
 }

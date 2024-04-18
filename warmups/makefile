@@ -1,4 +1,4 @@
-all: ex1 ex2 ex3
+all: ex1 ex2 ex3 ex4
 
 ex1: clean
 	..\..\mips\armips.exe exercise1.s
@@ -11,6 +11,10 @@ ex2: clean
 ex3: clean
 	..\..\mips\armips.exe exercise3.s
 	python ..\bin2exe.py exercise3.bin exercise3.ps-exe
+
+ex4: clean
+	..\..\mips\armips.exe factorial.s
+	python ..\bin2exe.py factorial.bin factorial.ps-exe
 
 clean:
 	@del *.bin 2>nul
