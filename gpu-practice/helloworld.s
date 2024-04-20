@@ -30,6 +30,9 @@ GP0 equ 0x1810            ; GP0 @ $1F801810: Render data & VRAM Access
 GP1 equ 0x1814            ; GP1 @ $1F801814: Display Control and Env Setup
 
 Main:
+	;-------------------------------------------
+	; Setup Display and VRAM
+	;-------------------------------------------
 	lui $t0, IO_BASE_ADDR   ; t0 = I/O Port Base Address (mapped at 0x1F80)
 	li $t1, 0x00000000      ; 00 = Reset GPU
 	sw $t1, GP1($t0)        ; Writes the packet to the GP1 with the offset of $t0
@@ -57,5 +60,21 @@ Main:
 
 	li $t1, 0xE5000000      ; E5 = Drawing offset - %YYYYYYYYYYXXXXXXXXXX
 	sw $t1, GP0($t0)        ; Drawing offset x=0, y=0
+
+	; ------------------------------
+	; GPU Memory Transfer Commands
+	; ------------------------------
+	li $t1, 0x020000FF      ; 02 = Fill Rectangle in VRAM (Color Parameter: 0xBBGGRR)
+	sw $t1, GP0($t0)
+
+	li $t1, 0x00000000      ; Fill Area, Parameter: 0xYYYYXXXX - Topleft (0,0)
+	sw $t1, GP0($t0)
+
+	li $t1, 0x00EF013F      ; Fill Area, 0xHHHHWWWW
+	sw $t1, GP0($t0)
+
+LoopForever:              ; Block execution so we can see our code running.  Basically a pause.
+	j LoopForever
+	nop
 
 .close
