@@ -56,7 +56,7 @@ Main:
 	li $t1, 0xE3000000      ; E3 = Drawing Area TopLeft - %YYYYYYYYYYXXXXXXXXXX (10 bits for x and 10 bits for y)
 	sw $t1, GP0($t0)        ; TopLeft set at x=0, y=0
 
-	li $t1, 0xE43BD3F       ; E4 = Drawing aread BottomRight - %YYYYYYYYYYXXXXXXXXXX (10 bits for x and 10 bits for y)
+	li $t1, 0xE403BD3F      ; E4 = Drawing aread BottomRight - %YYYYYYYYYYXXXXXXXXXX (10 bits for x and 10 bits for y)
 	sw $t1, GP0($t0)        ; BottomRight set to x=319, y=239 (index starts at 0, so 320x240 is the real size)
 
 	li $t1, 0xE5000000      ; E5 = Drawing offset - %YYYYYYYYYYXXXXXXXXXX
