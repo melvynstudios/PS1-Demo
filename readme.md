@@ -8,6 +8,7 @@ The use of this repo is for educational purposes only.
 - PS1 Emulator [PCSX-Redux](https://pcsx-redux.consoledev.net/)
 - Assembler [armips](https://github.com/Kingcom/armips)
 - Editor [VSCode](https://code.visualstudio.com/)
+- Decimal/Hexadecimal [converter](https://www.rapidtables.com/convert/number/decimal-to-hex.html)
 - Wiki [psx-psx](https://psx-spx.consoledev.net/graphicsprocessingunitgpu/)
 
 

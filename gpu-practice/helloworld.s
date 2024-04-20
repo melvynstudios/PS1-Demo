@@ -62,16 +62,32 @@ Main:
 	sw $t1, GP0($t0)        ; Drawing offset x=0, y=0
 
 	; ------------------------------
-	; GPU Memory Transfer Commands
+	; Clear Screen and Draw background
 	; ------------------------------
-	li $t1, 0x020000FF      ; 02 = Fill Rectangle in VRAM (Color Parameter: 0xBBGGRR)
-	sw $t1, GP0($t0)
+	li $t1, 0x02FF2C2E      ; 02 = Fill Rectangle in VRAM (Color Parameter: 0xBBGGRR)
+	sw $t1, GP0($t0)        ; r=46, g=44, b=255
 
 	li $t1, 0x00000000      ; Fill Area, Parameter: 0xYYYYXXXX - Topleft (0,0)
 	sw $t1, GP0($t0)
 
 	li $t1, 0x00EF013F      ; Fill Area, 0xHHHHWWWW
 	sw $t1, GP0($t0)
+
+	; ------------------------------
+	; Draw flat-shaded triangle
+	; https://psx-spx.consoledev.net/graphicsprocessingunitgpu/#gpu-render-polygon-commands
+	; ------------------------------
+  li $t1, 0x2000FFFF         ; 20 = Flat-shaded triangle (Parameter Color: 0xBBGGRR)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x00320032         ; Vertex 1: (Parameter 0xYyyyXxxx) (x=50,y=50)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x001E0064         ; Vertex 2: (Parameter 0xYyyyXxxx) (x=100,y=30)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x0064006E         ; Vertex 3: (Parameter 0xYyyyXxxx) (x=110,y=100)
+  sw $t1, GP0($t0)           ; Write GP0 Command
 
 LoopForever:              ; Block execution so we can see our code running.  Basically a pause.
 	j LoopForever
