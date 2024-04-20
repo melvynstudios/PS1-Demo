@@ -30,10 +30,11 @@ GP0 equ 0x1810            ; GP0 @ $1F801810: Render data & VRAM Access
 GP1 equ 0x1814            ; GP1 @ $1F801814: Display Control and Env Setup
 
 Main:
+	lui $t0, IO_BASE_ADDR   ; t0 = I/O Port Base Address (mapped at 0x1F80)
+
 	;-------------------------------------------
 	; Setup Display and VRAM
 	;-------------------------------------------
-	lui $t0, IO_BASE_ADDR   ; t0 = I/O Port Base Address (mapped at 0x1F80)
 	li $t1, 0x00000000      ; 00 = Reset GPU
 	sw $t1, GP1($t0)        ; Writes the packet to the GP1 with the offset of $t0
 
