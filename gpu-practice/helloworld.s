@@ -46,4 +46,16 @@ Main:
 	li $t1, 0x07042018      ; 07 = Vertical Display Range %yyyyyyyyyyYYYYYYYYYY (264-24)
 	sw $t1, GP1($t0)
 
+	li $t1, 0xE1000400      ; E1 = Draw Mode Settings
+	sw $t1, GP0($t0)
+
+	li $t1, 0xE3000000      ; E3 = Drawing Area TopLeft - %YYYYYYYYYYXXXXXXXXXX (10 bits for x and 10 bits for y)
+	sw $t1, GP0($t0)        ; TopLeft set at x=0, y=0
+
+	li $t1, 0xE43BD3F       ; E4 = Drawing aread BottomRight - %YYYYYYYYYYXXXXXXXXXX (10 bits for x and 10 bits for y)
+	sw $t1, GP0($t0)        ; BottomRight set to x=319, y=239 (index starts at 0, so 320x240 is the real size)
+
+	li $t1, 0xE5000000      ; E5 = Drawing offset - %YYYYYYYYYYXXXXXXXXXX
+	sw $t1, GP0($t0)        ; Drawing offset x=0, y=0
+
 .close
