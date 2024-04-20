@@ -1,6 +1,6 @@
 .psx
 .create "helloworld.bin", 0x80010000
-.org 0x8001000
+.org 0x80010000
 
 ; Playstation has a boot process, but once that is completed it give us control
 ; We need to setup everything to start drawing things
