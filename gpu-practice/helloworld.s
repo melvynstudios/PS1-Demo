@@ -108,27 +108,43 @@ Main:
   li $t1, 0x2000FFFF         ; 20 = Flat-shaded triangle (Parameter Color: 0xBBGGRR)
   sw $t1, GP0($t0)           ; Write GP0 Command
 
-  li $t1, 0x007800A0         ; Vertex 1: (Parameter 0xYyyyXxxx) (x=50,y=50)
+  li $t1, 0x007800A0         ; Vertex 1: (Parameter 0xYyyyXxxx) (x=160,y=120)
   sw $t1, GP0($t0)           ; Write GP0 Command
 
-  li $t1, 0x008C0096         ; Vertex 2: (Parameter 0xYyyyXxxx) (x=100,y=30)
+  li $t1, 0x008C0096         ; Vertex 2: (Parameter 0xYyyyXxxx) (x=150,y=140)
   sw $t1, GP0($t0)           ; Write GP0 Command
 
-  li $t1, 0x008C00AA         ; Vertex 3: (Parameter 0xYyyyXxxx) (x=110,y=100)
+  li $t1, 0x008C00AA         ; Vertex 3: (Parameter 0xYyyyXxxx) (x=170,y=140)
   sw $t1, GP0($t0)           ; Write GP0 Command
 ; ---------------------------------------------------------------------------------
 ; mouth
   li $t1, 0x2000FFFF         ; 20 = Flat-shaded triangle (Parameter Color: 0xBBGGRR)
   sw $t1, GP0($t0)           ; Write GP0 Command
 
-  li $t1, 0x00A00078         ; Vertex 1: (Parameter 0xYyyyXxxx) (x=50,y=50)
+  li $t1, 0x00A00078         ; Vertex 1: (Parameter 0xYyyyXxxx) (x=120,y=160)
   sw $t1, GP0($t0)           ; Write GP0 Command
 
-  li $t1, 0x00A000C8         ; Vertex 2: (Parameter 0xYyyyXxxx) (x=100,y=30)
+  li $t1, 0x00A000C8         ; Vertex 2: (Parameter 0xYyyyXxxx) (x=200,y=160)
   sw $t1, GP0($t0)           ; Write GP0 Command
 
-  li $t1, 0x00B400A0         ; Vertex 3: (Parameter 0xYyyyXxxx) (x=110,y=100)
+  li $t1, 0x00B400A0         ; Vertex 3: (Parameter 0xYyyyXxxx) (x=160,y=180)
   sw $t1, GP0($t0)           ; Write GP0 Command
+; ---------------------------------------------------------------------------------
+; cigar
+	li $t1, 0x30FF31FF         ; 30 = Gourand-shaded triangle
+	sw $t1, GP0($t0)
+	li $t1, 0x00BA006E         ; Vertex 1: 0xYyyyXxxx (x=155,y=160)
+	sw $t1, GP0($t0)
+
+	li $t1, 0x00A88332         ; Color 2 0xBBGGRR
+	sw $t1, GP0($t0)
+	li $t1, 0x00BA0082         ; Vertex 2: x=165, y=160
+	sw $t1, GP0($t0)
+
+	li $t1, 0x0000FF00         ; Color 2 0xBBGGRR
+	sw $t1, GP0($t0)
+	li $t1, 0x00A60096         ; Vertex 3: x=175, y=150
+	sw $t1, GP0($t0)
 
 LoopForever:              ; Block execution so we can see our code running.  Basically a pause.
 	j LoopForever

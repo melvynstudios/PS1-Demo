@@ -70,16 +70,3 @@ command|Primitive
 *PACKETS*
 
 Command + Params CCPPPPPP (CC=command, PP=param)
-
-
-
-
-
-Eyes:
-Left Eye: Vertices at (100, 80), (120, 60), (140, 80)
-Right Eye: Vertices at (180, 80), (200, 60), (220, 80)
-Nose:
-Vertices at (160, 120), (150, 140), (170, 140)
-Mouth:
-Vertices at (120, 160), (200, 160), (160, 180)
-
