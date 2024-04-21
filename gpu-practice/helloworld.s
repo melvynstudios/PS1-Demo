@@ -131,17 +131,17 @@ Main:
   sw $t1, GP0($t0)           ; Write GP0 Command
 ; ---------------------------------------------------------------------------------
 ; cigar
-	li $t1, 0x30FF31FF         ; 30 = Gourand-shaded triangle
+	li $t1, 0x30283C8B         ; 30 = Gourand-shaded triangle
 	sw $t1, GP0($t0)
 	li $t1, 0x00BA006E         ; Vertex 1: 0xYyyyXxxx (x=155,y=160)
 	sw $t1, GP0($t0)
 
-	li $t1, 0x00A88332         ; Color 2 0xBBGGRR
+	li $t1, 0x0054382B         ; Color 2 0xBBGGRR
 	sw $t1, GP0($t0)
 	li $t1, 0x00BA0082         ; Vertex 2: x=165, y=160
 	sw $t1, GP0($t0)
 
-	li $t1, 0x0000FF00         ; Color 2 0xBBGGRR
+	li $t1, 0x00302A1E         ; Color 2 0xBBGGRR
 	sw $t1, GP0($t0)
 	li $t1, 0x00A60096         ; Vertex 3: x=175, y=150
 	sw $t1, GP0($t0)
