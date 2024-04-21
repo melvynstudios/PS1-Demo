@@ -78,16 +78,56 @@ Main:
 	; Draw flat-shaded triangle
 	; https://psx-spx.consoledev.net/graphicsprocessingunitgpu/#gpu-render-polygon-commands
 	; ------------------------------
+	; Left Eye
   li $t1, 0x2000FFFF         ; 20 = Flat-shaded triangle (Parameter Color: 0xBBGGRR)
   sw $t1, GP0($t0)           ; Write GP0 Command
 
-  li $t1, 0x00320032         ; Vertex 1: (Parameter 0xYyyyXxxx) (x=50,y=50)
+  li $t1, 0x00500064         ; Vertex 1: (Parameter 0xYyyyXxxx) (x=50,y=50)
   sw $t1, GP0($t0)           ; Write GP0 Command
 
-  li $t1, 0x001E0064         ; Vertex 2: (Parameter 0xYyyyXxxx) (x=100,y=30)
+  li $t1, 0x003C0078         ; Vertex 2: (Parameter 0xYyyyXxxx) (x=100,y=30)
   sw $t1, GP0($t0)           ; Write GP0 Command
 
-  li $t1, 0x0064006E         ; Vertex 3: (Parameter 0xYyyyXxxx) (x=110,y=100)
+  li $t1, 0x0050008C         ; Vertex 3: (Parameter 0xYyyyXxxx) (x=110,y=100)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+; ---------------------------------------------------------------------------------
+; Right Eye
+  li $t1, 0x2000FFFF         ; 20 = Flat-shaded triangle (Parameter Color: 0xBBGGRR)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x005000B4         ; Vertex 1: (Parameter 0xYyyyXxxx) (x=50,y=50)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x003C00C8         ; Vertex 2: (Parameter 0xYyyyXxxx) (x=100,y=30)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x005000DC         ; Vertex 3: (Parameter 0xYyyyXxxx) (x=110,y=100)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+; ---------------------------------------------------------------------------------
+; Nose
+  li $t1, 0x2000FFFF         ; 20 = Flat-shaded triangle (Parameter Color: 0xBBGGRR)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x007800A0         ; Vertex 1: (Parameter 0xYyyyXxxx) (x=50,y=50)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x008C0096         ; Vertex 2: (Parameter 0xYyyyXxxx) (x=100,y=30)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x008C00AA         ; Vertex 3: (Parameter 0xYyyyXxxx) (x=110,y=100)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+; ---------------------------------------------------------------------------------
+; mouth
+  li $t1, 0x2000FFFF         ; 20 = Flat-shaded triangle (Parameter Color: 0xBBGGRR)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x00A00078         ; Vertex 1: (Parameter 0xYyyyXxxx) (x=50,y=50)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x00A000C8         ; Vertex 2: (Parameter 0xYyyyXxxx) (x=100,y=30)
+  sw $t1, GP0($t0)           ; Write GP0 Command
+
+  li $t1, 0x00B400A0         ; Vertex 3: (Parameter 0xYyyyXxxx) (x=110,y=100)
   sw $t1, GP0($t0)           ; Write GP0 Command
 
 LoopForever:              ; Block execution so we can see our code running.  Basically a pause.
