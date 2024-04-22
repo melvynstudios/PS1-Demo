@@ -150,4 +150,41 @@ LoopForever:              ; Block execution so we can see our code running.  Bas
 	j LoopForever
 	nop
 
+;-----------------------------------------------------
+; Subroutine to draw a flat-shaded triangle
+; We can call the function with decimal instead of hex
+; Args:
+; $a0 = IO_BASE_ADDR (IO Ports at 0x1F80)
+; $s1 = x1
+; $s2 = y1
+; $s3 = x2
+; $s4 = y2
+; $s5 = x3
+; $s6 = y3
+;-----------------------------------------------------
+DrawFlatTriangle:
+	lui $t0, 0x2000        ; Load the command into $t1 register
+	or $t1, $t0, $s0       ; Load Command and the color into $t1
+	sw $t1, GP0($a0)       ; Command that we know from above
+	; first Vertex
+	; https://people.cs.pitt.edu/~childers/CS0447/lectures/shift-operations.pdf
+	ssl $s2, $s2, 16       ; shift left instruction fills 16 zeros to the left of the word
+	andi $s1, $s1, 0xFFFF  ; This code ensures that we have 2 bytes for the x Coordinate
+	or $t1, $s1, $s2       ; This allows us to put $s1 (x) and $s2 (y) into the $t1 register
+	sw $t1, GP0($a0)       ; Command that we know from above
+	; second vertex
+	ssl $s4, $s4, 16       ; y2 <<= 16 as same as vertex 1
+	andi $s3, $s3, 0xFFFF  ; x2 &= 0xFFFF
+	or $t1, $s3, $s4       ; x2 | y2
+	sw $t1, GP0($a0)
+	; third vertex
+	ssl $s6, $s6, 16       ; y3 <<= 16 as same as vertex 1
+	andi $s5, $s5, 0xFFFF  ; x3 &= 0xFFFF
+	or $t1, $s5, $s6       ; x3 | y3
+	sw $t1, GP0($a0)
+
+	jr $ra                 ; Return address (stored in $ra)
+	nop
+
+
 .close
