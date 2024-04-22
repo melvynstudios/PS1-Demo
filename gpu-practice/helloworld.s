@@ -90,8 +90,8 @@ Main:
 
   li $t1, 0x0050008C         ; Vertex 3: (Parameter 0xYyyyXxxx) (x=110,y=100)
   sw $t1, GP0($t0)           ; Write GP0 Command
-; ---------------------------------------------------------------------------------
-; Right Eye
+	; ---------------------------------------------------------------------------------
+	; Right Eye
   li $t1, 0x2000FFFF         ; 20 = Flat-shaded triangle (Parameter Color: 0xBBGGRR)
   sw $t1, GP0($t0)           ; Write GP0 Command
 
@@ -116,8 +116,8 @@ Main:
 
   li $t1, 0x008C00AA         ; Vertex 3: (Parameter 0xYyyyXxxx) (x=170,y=140)
   sw $t1, GP0($t0)           ; Write GP0 Command
-; ---------------------------------------------------------------------------------
-; mouth
+	; ---------------------------------------------------------------------------------
+	; mouth
   li $t1, 0x2000FFFF         ; 20 = Flat-shaded triangle (Parameter Color: 0xBBGGRR)
   sw $t1, GP0($t0)           ; Write GP0 Command
 
@@ -129,8 +129,8 @@ Main:
 
   li $t1, 0x00B400A0         ; Vertex 3: (Parameter 0xYyyyXxxx) (x=160,y=180)
   sw $t1, GP0($t0)           ; Write GP0 Command
-; ---------------------------------------------------------------------------------
-; cigar
+	; ---------------------------------------------------------------------------------
+	; cigar
 	li $t1, 0x30283C8B         ; 30 = Gourand-shaded triangle
 	sw $t1, GP0($t0)
 	li $t1, 0x00BA006E         ; Vertex 1: 0xYyyyXxxx (x=155,y=160)
@@ -145,6 +145,22 @@ Main:
 	sw $t1, GP0($t0)
 	li $t1, 0x00A60096         ; Vertex 3: x=175, y=150
 	sw $t1, GP0($t0)
+
+	; ------------------------------------------------------------------------------------
+	; Set IO_BASE_ADDR to $a0 which is used for a global parameter
+	; ------------------------------------------------------------------------------------
+	lui $a0, IO_BASE_ADDR        ; Different from above because that is using $t0 register
+	; ---------------------------------------------------------------------------------
+	; Call Body
+	li $s0, 0x83FF6B        ; Param: Color (0xBBGGRR)
+	li $s1, 160             ; Param: x1
+	li $s2, 190             ; Param: y1
+	li $s3, 290             ; Param: x2
+	li $s4, 230             ; Param: y2
+	li $s5, 30              ; Param: x3
+	li $s6, 230             ; Param: y3
+	jal DrawFlatTriangle    ; Jump to Draw Flat Triangle Subroutine
+	nop
 
 LoopForever:              ; Block execution so we can see our code running.  Basically a pause.
 	j LoopForever
@@ -168,17 +184,17 @@ DrawFlatTriangle:
 	sw $t1, GP0($a0)       ; Command that we know from above
 	; first Vertex
 	; https://people.cs.pitt.edu/~childers/CS0447/lectures/shift-operations.pdf
-	ssl $s2, $s2, 16       ; shift left instruction fills 16 zeros to the left of the word
+	sll $s2, $s2, 16       ; shift left instruction fills 16 zeros to the left of the word
 	andi $s1, $s1, 0xFFFF  ; This code ensures that we have 2 bytes for the x Coordinate
 	or $t1, $s1, $s2       ; This allows us to put $s1 (x) and $s2 (y) into the $t1 register
 	sw $t1, GP0($a0)       ; Command that we know from above
 	; second vertex
-	ssl $s4, $s4, 16       ; y2 <<= 16 as same as vertex 1
+	sll $s4, $s4, 16       ; y2 <<= 16 as same as vertex 1
 	andi $s3, $s3, 0xFFFF  ; x2 &= 0xFFFF
 	or $t1, $s3, $s4       ; x2 | y2
 	sw $t1, GP0($a0)
 	; third vertex
-	ssl $s6, $s6, 16       ; y3 <<= 16 as same as vertex 1
+	sll $s6, $s6, 16       ; y3 <<= 16 as same as vertex 1
 	andi $s5, $s5, 0xFFFF  ; x3 &= 0xFFFF
 	or $t1, $s5, $s6       ; x3 | y3
 	sw $t1, GP0($a0)
