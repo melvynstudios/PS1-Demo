@@ -103,8 +103,8 @@ Main:
 
 	li $t1, 0x005000DC         ; Vertex 3: (Parameter 0xYyyyXxxx) (x=110,y=100)
 	sw $t1, GP0($t0)           ; Write GP0 Command
-; ---------------------------------------------------------------------------------
-; Nose
+	; ---------------------------------------------------------------------------------
+	; Nose
 	li $t1, 0x2000FFFF         ; 20 = Flat-shaded triangle (Parameter Color: 0xBBGGRR)
 	sw $t1, GP0($t0)           ; Write GP0 Command
 
