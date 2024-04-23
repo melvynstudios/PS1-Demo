@@ -129,4 +129,14 @@ Main:
 .close
 ```
 
+#### C Types and MIPS directives
+
+C type|MIPS directive|Size
+---|---|---
+char|.byte|1 byte or 8 bits
+short|.hword|2 bytes or 16 bits
+int|.word|4 bytes or 32 bits
+long|.word|4 bytes or 32 bits
+long long|.dword|8 bytes or 64 bits
+
 
