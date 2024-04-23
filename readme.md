@@ -72,3 +72,28 @@ command|Primitive
 *PACKETS*
 
 Command + Params CCPPPPPP (CC=command, PP=param)
+
+### Application Binary Interface (ABI)
+
+The Application Binary Interface will tell us how a compiled program will interface with a given system.
+
+The ABI defines how data structures or computational routines are accessed in machine code.
+
+See table for ABI [calling convention](https://en.wikipedia.org/wiki/MIPS_architecture#Calling_conventions)
+
+Registers for 032 calling convention
+
+Name|Number|Use|Callee must preserve?
+---|---|---|---
+$zero|$0|constant 0|NA
+$at|$1|assembler temporary|No
+$v0-$v1|$2-$3|Values for function returns and expression evaulation|No
+$a0-$a3|$4-$7|Arguments to function calls|No
+$t0-$t7|$8-$15|Temporary registers|No
+$s0-$s7|$16-$23|Saved registers|Yes
+$t8-$t9|$24-$25|Temporary registers|No
+$k0-$k1|$26-$27|Kernel registers|NA
+$gp|$28|Global pointer|Yes
+$sp|$29|Stack pointer|Yes
+$fp|$30|Frame pointer|Yes
+$ra|$31|Return address|NA
