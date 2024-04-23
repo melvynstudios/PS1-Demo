@@ -3,6 +3,8 @@
 This is a project for learning low level programming on the PS1.
 The use of this repo is for educational purposes only.
 
+Best of the PS1 games, which makes this project so special. [Games](https://racketboy.com/retro/games-that-pushed-the-limits-of-the-sony-playstation-ps1)
+
 ## Tools being used
 
 - PS1 Emulator [PCSX-Redux](https://pcsx-redux.consoledev.net/)
