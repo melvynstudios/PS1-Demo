@@ -97,3 +97,36 @@ $gp|$28|Global pointer|Yes
 $sp|$29|Stack pointer|Yes
 $fp|$30|Frame pointer|Yes
 $ra|$31|Return address|NA
+
+```c
+long numlives;   // 32 bits
+int score;       // 32 bits
+
+int main() {
+	long a;       // 32 bits
+	a = numlives;
+
+	return 0;
+}
+```
+
+Local variables like `a` we try and prioritize them to use registers on the MIPS processor.
+
+long a might be stored in $t0 or $t1
+
+Global variables require that we reserve space in memory.
+
+```asm
+.org 0x80010000
+
+numlives: .word 0    ; long numlives, .word declares we need 4 bytes or 32 bits reserved in memory.
+score:    .word 0    ; int score
+
+Main:
+	la $t0, numlives
+	lw $t1, 0($t0)     ; a = numlives
+
+.close
+```
+
+
