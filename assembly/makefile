@@ -3,6 +3,7 @@ build: clean
 	python ..\bin2exe.py fillmem.bin fillmem.ps-exe
 
 image: clean
+	@echo "There is a known issue with displaying this on Windows 11"
 	..\..\mips\armips.exe image.s
 	python ..\bin2exe.py image.bin image.ps-exe
 
