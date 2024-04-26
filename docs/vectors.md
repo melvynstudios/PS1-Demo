@@ -96,3 +96,11 @@ Main:
 ```
 
 An array is a pointer to an initial position with an offset by a specific amount.
+
+## Multiplication and Division
+
+When we are multiplying or dividing numbers in Assembly, the output is stored in the $hi and $lo registers.
+
+The reason for this is because if we are multiplying two numbers together there is a potential to overflow, so we store the return value in those two registers, that are joined together to form a 64 bit number.
+
+When we are dividing, the $hi contains the remainder and the $lo contains the quotient.
