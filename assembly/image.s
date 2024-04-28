@@ -52,6 +52,7 @@ Main:
 	;------------------------------------------------------------------------
 	; Copy rect data from CPU to VRAM
 	;------------------------------------------------------------------------
+CopyImageToVRAM:
 	li $t1, 0xA0000000      ; A0 = Command to copy Rect CPU to VRAM
 	sw $t1, GP0($a0)        ; Write GP0 Command
 	li $t1, 0x00000000      ; Location of Copy Area, TopLeft (x=0, y=0)
@@ -69,9 +70,9 @@ LoopWords:
 	nop
 	sw    $t1, GP0($a0)
 	addiu $t2, 4             ; $t2 += 4, which gives us our next memory address
-	addiu $t0, $t0, -1        ; t0--
 	bnez  $t0, LoopWords     ; if ($t0 != 0), keep looping
-	nop
+	; Due to the MIPS pipeline this instruction will happen before the jump, which is why we previously used nop
+	addiu $t0, $t0, -1        ; t0-- (Delay Slot so we don't waste CPU Cycles with NoOp instructions)
 
 LoopForever:              ; Block execution so we can see our code running.  Basically a pause.
 	j LoopForever
