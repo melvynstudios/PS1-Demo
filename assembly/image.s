@@ -67,9 +67,8 @@ CopyImageToVRAM:
 
 LoopWords:
 	lw    $t1, 0($t2)        ; t1 = word from the image array
-	nop
+	addiu $t2, 4             ; $t2 += 4, which gives us our next memory address (Delay Slot of the load above)
 	sw    $t1, GP0($a0)
-	addiu $t2, 4             ; $t2 += 4, which gives us our next memory address
 	bnez  $t0, LoopWords     ; if ($t0 != 0), keep looping
 	; Due to the MIPS pipeline this instruction will happen before the jump, which is why we previously used nop
 	addiu $t0, $t0, -1        ; t0-- (Delay Slot so we don't waste CPU Cycles with NoOp instructions)
