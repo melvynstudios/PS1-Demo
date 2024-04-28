@@ -10,6 +10,7 @@ Best of the PS1 games, which makes this project so special. [Games](https://rack
 - PS1 Emulator [PCSX-Redux](https://pcsx-redux.consoledev.net/)
 - Assembler [armips](https://github.com/Kingcom/armips)
 - Editor [VSCode](https://code.visualstudio.com/)
+  - Extension [PSX.Dev](https://marketplace.visualstudio.com/items?itemName=Grumpycoders.psx-dev)
 - Decimal/Hexadecimal [converter](https://www.rapidtables.com/convert/number/decimal-to-hex.html)
 - Wiki [psx-psx](https://psx-spx.consoledev.net/graphicsprocessingunitgpu/)
 
