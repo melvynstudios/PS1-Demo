@@ -1,4 +1,0 @@
--m32
--I.
--I../third_party/nugget
--I../third_party/psyq-iwyu/include

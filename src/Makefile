@@ -2,11 +2,11 @@ TARGET = ps1-demo
 TYPE = ps-exe
 
 SRCS = \
-../third_party/nugget/common/crt0/crt0.s \
+third_party/nugget/common/crt0/crt0.s \
 main.c
 
-CPPFLAGS += -I../third_party/psyq-iwyu/include
-LDFLAGS += -L../third_party/psyq/lib
+CPPFLAGS += -Ithird_party/psyq-iwyu/include
+LDFLAGS += -Lthird_party/psyq/lib
 LDFLAGS += -Wl,--start-group
 LDFLAGS += -lapi
 LDFLAGS += -lc
@@ -32,4 +32,4 @@ LDFLAGS += -lspu
 LDFLAGS += -ltap
 LDFLAGS += -Wl,--end-group
 
-include ../third_party/nugget/common.mk
+include third_party/nugget/common.mk
