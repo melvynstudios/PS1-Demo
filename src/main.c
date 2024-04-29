@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <sys/types.h>
 #include <libgte.h>
 #include <libetc.h>
 #include <libgpu.h>
@@ -8,6 +9,20 @@
 #define SCREEN_RES_Y 240
 #define SCREEN_CENTER_X (SCREEN_RES_X >> 1) // bit shifting for division, this is divided by 2
 #define SCREEN_CENTER_Y (SCREEN_RES_Y >> 1)
+
+/*  DATA TYPES
+  char  c;   // -> 8 bits, 1 byte
+  short s;   // -> 16 bits, 2 bytes
+  int   i;   // -> 32 bits, 4 bytes
+  long  l;   // -> 32 bits, 4 bytes
+
+  u_short us;  // unsigned 16 bits
+  u_long  ul;  // unsigned 32 bits
+
+  POLY_F3 *triangle;
+  TILE    *tile;
+  POLY_G4 *quad;
+*/
 
 typedef struct {
   DRAWENV draw[2];   // Draw Buffer is the back buffer which we draw to
