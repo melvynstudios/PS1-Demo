@@ -40,7 +40,6 @@ char *nextprim;          // pointer to next primitive in the buffer
 
 POLY_F3 *triangle;
 TILE    *tile;
-POLY_G4 *quad;
 
 void ScreenInit(void) {
   // Reset GPU
@@ -84,27 +83,34 @@ void DisplayFrame(void) {
   PutDispEnv(&screen.disp[currentBuff]);
   PutDrawEnv(&screen.draw[currentBuff]);
 
-  // TODO: Sort objects in Ordering Table
+  // Draw the ordering table for the current buffer
+  DrawOTag(ot[currentBuff] + OT_LENGTH - 1);
 
   // Swaps the buffers
   currentBuff = !currentBuff;
+
+  // Reset next primitive pointer to the start of the primitive buffer
+  nextprim = primbuff[currentBuff];
 }
 
 void Setup(void) {
   ScreenInit();
+
+  nextprim = primbuff[currentBuff];
 }
 
 void Update(void) {
   // Empty the ordering table
   ClearOTagR(ot[currentBuff], OT_LENGTH);
 
+  // These commands are very similiar to the asm code that we wrote in the practice
   tile = (TILE*)nextprim;                        // Cast next primitive
   setTile(tile);                                 // Initialize the tile
   setXY0(tile, 82, 32);                          // Set (x, y) position
   setWH(tile, 64, 64);                           // Set width and height
   setRGB0(tile, 0, 255, 0);                      // Set color
   addPrim(ot[currentBuff], tile);                // Add the primitive to the ordering table
-  nextPrim += sizeof(TILE);                      // Advance nextprim pointer
+  nextprim += sizeof(TILE);                      // Advance nextprim pointer
 
   triangle = (POLY_F3 *)nextprim;                // Cast next primitive
   setPolyF3(triangle);                           // Initialize the triangle
