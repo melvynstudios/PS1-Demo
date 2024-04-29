@@ -10,6 +10,8 @@
 #define SCREEN_CENTER_X (SCREEN_RES_X >> 1) // bit shifting for division, this is divided by 2
 #define SCREEN_CENTER_Y (SCREEN_RES_Y >> 1)
 
+#define OT_LENGTH 16
+
 /*  DATA TYPES
   char  c;   // -> 8 bits, 1 byte
   short s;   // -> 16 bits, 2 bytes
@@ -31,6 +33,14 @@ typedef struct {
 
 DoubleBuff screen;
 short currentBuff;  // 0 or 1 which contains the curren buffer.  We swap the buffers on the backend
+
+u_long ot[2][OT_LENGTH]; // ordering table
+char primbuff[2][2048];  // the primitive buffer for the ordering table
+char *nextprim;          // pointer to next primitive in the buffer
+
+POLY_F3 *triangle;
+TILE    *tile;
+POLY_G4 *quad;
 
 void ScreenInit(void) {
   // Reset GPU
@@ -85,7 +95,23 @@ void Setup(void) {
 }
 
 void Update(void) {
-  // TODO: update
+  // Empty the ordering table
+  ClearOTagR(ot[currentBuff], OT_LENGTH);
+
+  tile = (TILE*)nextprim;                        // Cast next primitive
+  setTile(tile);                                 // Initialize the tile
+  setXY0(tile, 82, 32);                          // Set (x, y) position
+  setWH(tile, 64, 64);                           // Set width and height
+  setRGB0(tile, 0, 255, 0);                      // Set color
+  addPrim(ot[currentBuff], tile);                // Add the primitive to the ordering table
+  nextPrim += sizeof(TILE);                      // Advance nextprim pointer
+
+  triangle = (POLY_F3 *)nextprim;                // Cast next primitive
+  setPolyF3(triangle);                           // Initialize the triangle
+  setXY3(triangle, 64, 100, 200, 150, 50, 220);  // Set triangle verticies (x0, y0), (x1, y1), (x2, y2)
+  setRGB0(triangle, 255, 0, 255);                // Set color
+  addPrim(ot[currentBuff], triangle);            // Add the primitive to the ordering table
+  nextprim += sizeof(POLY_F3);                   // Advance nextprim pointer
 }
 
 void Render(void) {
