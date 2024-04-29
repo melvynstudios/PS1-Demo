@@ -9,23 +9,13 @@
 #define SCREEN_RES_Y 240
 #define SCREEN_CENTER_X (SCREEN_RES_X >> 1) // bit shifting for division, this is divided by 2
 #define SCREEN_CENTER_Y (SCREEN_RES_Y >> 1)
+#define SCREEN_Z 400
 
 #define OT_LENGTH 16
 
-/*  DATA TYPES
-  char  c;   // -> 8 bits, 1 byte
-  short s;   // -> 16 bits, 2 bytes
-  int   i;   // -> 32 bits, 4 bytes
-  long  l;   // -> 32 bits, 4 bytes
-
-  u_short us;  // unsigned 16 bits
-  u_long  ul;  // unsigned 32 bits
-
-  POLY_F3 *triangle;
-  TILE    *tile;
-  POLY_G4 *quad;
-*/
-
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Declarations and global variables
+///////////////////////////////////////////////////////////////////////////////////////////////////
 typedef struct {
   DRAWENV draw[2];   // Draw Buffer is the back buffer which we draw to
   DISPENV disp[2];   // Display Buffer is the front buffer which we display
@@ -38,9 +28,13 @@ u_long ot[2][OT_LENGTH]; // ordering table
 char primbuff[2][2048];  // the primitive buffer for the ordering table
 char *nextprim;          // pointer to next primitive in the buffer
 
-POLY_F3 *triangle;
-TILE    *tile;
+POLY_F3 *polyf3;
+TILE *tile;
+POLY_G4 *quadg4;
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Initialize the display mode and setup double buffering
+///////////////////////////////////////////////////////////////////////////////////////////////////
 void ScreenInit(void) {
   // Reset GPU
   ResetGraph(0);
@@ -72,9 +66,12 @@ void ScreenInit(void) {
   SetGeomScreen(SCREEN_CENTER_X);
 
   // Enable Display
-  SetDispMask(1);
+  SetDispMask(SCREEN_Z);
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Draw the current frame using the ordering table
+///////////////////////////////////////////////////////////////////////////////////////////////////
 void DisplayFrame(void) {
   // Controls the vsync of the display
   DrawSync(0);
@@ -104,20 +101,30 @@ void Update(void) {
   ClearOTagR(ot[currentBuff], OT_LENGTH);
 
   // These commands are very similiar to the asm code that we wrote in the practice
-  tile = (TILE*)nextprim;                        // Cast next primitive
-  setTile(tile);                                 // Initialize the tile
-  setXY0(tile, 82, 32);                          // Set (x, y) position
-  setWH(tile, 64, 64);                           // Set width and height
-  setRGB0(tile, 0, 255, 0);                      // Set color
-  addPrim(ot[currentBuff], tile);                // Add the primitive to the ordering table
-  nextprim += sizeof(TILE);                      // Advance nextprim pointer
+  tile = (TILE*) nextprim;                              // Cast next primitive
+  setTile(tile);                                       // Initialize the tile
+  setXY0(tile, 82, 32);                                // Set (x, y) position
+  setWH(tile, 64, 64);                                 // Set width and height
+  setRGB0(tile, 0, 255, 0);                            // Set color
+  addPrim(ot[currentBuff], tile);                      // Add the primitive to the ordering table
+  nextprim += sizeof(TILE);                            // Advance nextprim pointer
 
-  triangle = (POLY_F3 *)nextprim;                // Cast next primitive
-  setPolyF3(triangle);                           // Initialize the triangle
-  setXY3(triangle, 64, 100, 200, 150, 50, 220);  // Set triangle verticies (x0, y0), (x1, y1), (x2, y2)
-  setRGB0(triangle, 255, 0, 255);                // Set color
-  addPrim(ot[currentBuff], triangle);            // Add the primitive to the ordering table
-  nextprim += sizeof(POLY_F3);                   // Advance nextprim pointer
+  polyf3 = (POLY_F3*) nextprim;                      // Cast next primitive
+  setPolyF3(polyf3);                                 // Initialize the triangle
+  setXY3(polyf3, 64, 100, 200, 150, 50, 220);        // Set triangle verticies (x0, y0), (x1, y1), (x2, y2)
+  setRGB0(polyf3, 255, 0, 255);                      // Set color
+  addPrim(ot[currentBuff], polyf3);                  // Add the primitive to the ordering table
+  nextprim += sizeof(POLY_F3);                         // Advance nextprim pointer
+
+  quadg4 = (POLY_G4*) nextprim;                        // Cast next primitive
+  setPolyG4(quadg4);                                   // Initialize the quad
+  setXY4(quadg4, 140, 50, 200, 40, 170, 120, 220, 80); // Set quad verticies (x0, y0), (x1, y1), (x2, y2), (x3, y3)
+  setRGB0(quadg4, 255, 0, 0);                          // Set color for vertex 1
+  setRGB1(quadg4, 0, 255, 0);                          // Set color for vertex 2
+  setRGB2(quadg4, 0, 0, 255);                          // Set color for vertex 3
+  setRGB3(quadg4, 255, 255, 0);                        // Set color for vertex 4
+  addPrim(ot[currentBuff], quadg4); // Add the primitive to the ordering table
+  nextprim += sizeof(POLY_G4);
 }
 
 void Render(void) {
