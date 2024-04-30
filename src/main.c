@@ -11,7 +11,9 @@
 #define SCREEN_CENTER_Y (SCREEN_RES_Y >> 1)
 #define SCREEN_Z 400
 
-#define OT_LENGTH 16
+#define OT_LENGTH 512
+#define NUM_VERTICES 8
+#define NUM_FACES 12
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,6 +30,7 @@ SVECTOR vertices[] = {
 	{ -128,  128,  128 }
 };
 
+// Triangle faces
 short faces[] = {
 	0, 3, 2,            // top
 	0, 2, 1,            // top

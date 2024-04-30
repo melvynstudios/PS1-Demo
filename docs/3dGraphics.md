@@ -69,3 +69,26 @@ We have the following primitives:
 	- used for colors
 - DVector
 	- 2d for x and y
+
+## Geometry Transformation Engine
+
+- GTE is a vector & matrix high-speed geometric processor
+- GTE has its own multiplier, accumulator, and divider.  [Registers]
+- It is implemented as a coprocessor 2 under the MIPS architecture
+                                                    __________
+                                                    | Memory |
+                                                    ----------
+                                                         |
+                                                         |
+//-------------------------------------------------------------------------//
+                         |
+                         |
+                      -------
+                      | CPU |
+                      -------
+                       [GTE]
+                       |cp2|
+
+### CPU Block Diagram
+
+![CPU Block](CPU-Block.png)
