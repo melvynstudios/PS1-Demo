@@ -89,6 +89,29 @@ We have the following primitives:
                        [GTE]
                        |cp2|
 
+### GTE Features
+
+- Fast vector/matrix calculations
+- Fast coordinate transformations
+- Fast perspective projections
+- Fast lighting calculations
+
 ### CPU Block Diagram
 
 ![CPU Block](CPU-Block.png)
+
+## 3d Transformations
+
+There is a pipeline to handle 3d transformations.
+
+1. When we start, the vertices are in `model space` (local coordinate system as they are defined in a modeling software like blender)
+	1. This means that all the vertices are local and relative to the origin point of the model.
+1. Start by transforming the vertices of the model into the world space.  This means multiply by world matrix.
+	1.  Transition the vertices of the model into the `world space`, which puts the model and its transformations in the world matrix.
+2. Next we convert the vertices into the view `space/camera space`.  This means multiply by view matrix.
+	1.  This puts the model into the camera view.  The new coordinate system becomes the eye of the camera
+3. The scene is now in view space and can now be projected into screen space. (perform the perspective divide)
+	1. We can use the GTE do do this for us.
+4. Rasterize the scene to the screen.
+
+
