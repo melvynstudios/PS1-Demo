@@ -114,4 +114,57 @@ There is a pipeline to handle 3d transformations.
 	1. We can use the GTE do do this for us.
 4. Rasterize the scene to the screen.
 
+Transformations are handled by the GTE using vectors.
 
+```c
+SVECTOR rotation    = {0, 0, 0};          // Declare the rotation vector {x, y, z} ... SVECTOR is small vector because the values are not going to be big
+VECTOR  translation = {0, 0, 480};        // Declare the translation vector {x, y, z}
+VECTOR  scale       = {ONE, ONE, ONE};    // Declare the scale vector {x, y, z}
+
+MATRIX world        = {0};                // Declare the world matrix
+```
+
+Functions that are available to use for handling world objects:
+
+func|description
+---|---
+RotMatrix(&rotation, &world);|Populate rotation values into world matrix
+TransMatrix(&world, &translation);|Populate translation values into world matrix
+ScaleMatrix(&world, &scale);|Populate scale values into world matrix
+SetRotMatrix(&world);| Sets the rotation matrix to be used by GTE
+SetTransMatrix(&world);| Sets the translation matrix to be used by GTE
+
+Example code:
+
+```c
+SVECTOR rotation    = {0, 0, 0};
+VECTOR  translation = {0, 0, 480};
+VECTOR  scale       = {ONE, ONE, ONE};
+
+MATRIX world        = {0};
+
+void Update(void) {
+	ClearOTagR(ot[currentBuffer], OT_LENGTH);   // Clear OT
+
+	RotMatrix(&rotation, &world);
+	TransMatrix(&world, &translation);
+	ScaleMatrix(&world, &scale);
+
+	SetRotMatrix(&world);
+	SetTransMatrix(&world);
+
+	poly = (POLY_F3*) nextprim;
+	SetPolyF3(poly);
+	setRGB0(poly, 255, 0, 0);
+
+	// Rotate, translate, and project the vertices & outputs the results into a primitive
+	otz = 0;  // Ordering table z for this triangle
+	otz += RotTransPers(&vertices[faces[0]], (long*) &poly->x0, &p, &flg);
+	otz += RotTransPers(&vertices[faces[1]], (long*) &poly->x1, &p, &flg);
+	otz += RotTransPers(&vertices[faces[2]], (long*) &poly->x2, &p, &flg);
+	otz /= 3;    // Average the z values
+
+	addPrim(ot[currentBuffer][otz], poly);
+	nextprim += sizeof(POLY_F3);
+}
+```
