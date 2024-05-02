@@ -150,10 +150,10 @@ void Update(void) {
   // Loop all triangle faces
   for (int i = 0; i < NUM_FACES * 3; i += 3) {
     poly = (POLY_G3 *)nextprim;
-    setPolyF3(poly);
-    setRGB0(poly, 255, 0, 0);
+    setPolyG3(poly);
+    setRGB0(poly, 255, 0, 255);
     setRGB1(poly, 255, 255, 0);
-    setRGB2(poly, 0, 255, 0);
+    setRGB2(poly, 0, 255, 255);
 
     otz = 0;
     otz += RotTransPers(&vertices[faces[i + 0]], (long *)&poly->x0, &p, &flg);
@@ -166,6 +166,9 @@ void Update(void) {
       nextprim += sizeof(POLY_G3);
     }
   }
+  rotation.vx += 6;
+  rotation.vy += 8;
+  rotation.vz += 12;
 }
 
 void Render(void) {
