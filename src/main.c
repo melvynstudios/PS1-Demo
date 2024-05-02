@@ -155,11 +155,13 @@ void Update(void) {
     setRGB1(poly, 255, 255, 0);
     setRGB2(poly, 0, 255, 255);
 
-    otz = 0;
-    otz += RotTransPers(&vertices[faces[i + 0]], (long *)&poly->x0, &p, &flg);
-    otz += RotTransPers(&vertices[faces[i + 1]], (long *)&poly->x1, &p, &flg);
-    otz += RotTransPers(&vertices[faces[i + 2]], (long *)&poly->x2, &p, &flg);
-    otz /= 3;
+    // backface culling or normal clipping is a technique where we only render faces that are towards the camera.
+    // we will discard rendering triangles that are not facing the camera
+    int nclip =
+        RotAverageNclip3(&vertices[faces[i + 0]], &vertices[faces[i + 1]],
+                         &vertices[faces[i + 2]], (long *)&poly->x0,
+                         (long *)&poly->x1, (long *)&poly->x2, &p, &otz, &flg);
+    if (nclip <= 0) continue;
 
     if ((otz > 0) && (otz < OT_LENGTH)) {
       addPrim(ot[currentBuff][otz], poly);
