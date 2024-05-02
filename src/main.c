@@ -13,7 +13,7 @@
 
 #define OT_LENGTH 256
 #define NUM_VERTICES 8
-#define NUM_FACES 12
+#define NUM_FACES 6
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -30,20 +30,22 @@ SVECTOR vertices[] = {
 	{ -128,  128,  128 }
 };
 
-// Triangle faces
+// Quad faces
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//     v0    v1
+//     +-----+
+//     |     |
+//     |     |
+//     +-----+
+//     v2    v3
+///////////////////////////////////////////////////////////////////////////////////////////////////
 short faces[] = {
-	0, 3, 2,            // top
-	0, 2, 1,            // top
-	4, 0, 1,            // front
-	4, 1, 5,          // front
-	7, 4, 5,         // bottom
-	7, 5, 6,         // bottom
-	5, 1, 2,         // right
-	5, 2, 6,         // right
-	2, 3, 7,         // back
-	2, 7, 6,         // back
-	0, 4, 7,         // left
-	0, 7, 3          // left
+    3, 2, 0, 1,
+    0, 1, 4, 5,
+    4, 5, 7, 6,
+    1, 2, 5, 6,
+    2, 3, 6, 7,
+    3, 0, 7, 4,
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +63,7 @@ u_long ot[2][OT_LENGTH]; // ordering table
 char primbuff[2][2048];  // the primitive buffer for the ordering table
 char *nextprim;          // pointer to next primitive in the buffer
 
-POLY_G3 *poly;
+POLY_G4 *poly;
 
 SVECTOR rotation    = {0, 0, 0};
 VECTOR  translation = {0, 0, 900};
@@ -148,24 +150,31 @@ void Update(void) {
   SetTransMatrix(&world);
 
   // Loop all triangle faces
-  for (int i = 0; i < NUM_FACES * 3; i += 3) {
-    poly = (POLY_G3 *)nextprim;
-    setPolyG3(poly);
+  for (int i = 0; i < NUM_FACES * 4; i += 4) {
+    poly = (POLY_G4 *)nextprim;
+    setPolyG4(poly);
     setRGB0(poly, 255, 0, 255);
     setRGB1(poly, 255, 255, 0);
     setRGB2(poly, 0, 255, 255);
+    setRGB3(poly, 0, 255, 0);
 
     // backface culling or normal clipping is a technique where we only render faces that are towards the camera.
     // we will discard rendering triangles that are not facing the camera
-    int nclip =
-        RotAverageNclip3(&vertices[faces[i + 0]], &vertices[faces[i + 1]],
-                         &vertices[faces[i + 2]], (long *)&poly->x0,
-                         (long *)&poly->x1, (long *)&poly->x2, &p, &otz, &flg);
+    int nclip = RotAverageNclip4(&vertices[faces[i + 0]],
+                                 &vertices[faces[i + 1]],
+                                 &vertices[faces[i + 2]],
+                                 &vertices[faces[i + 3]],
+                                 (long *)&poly->x0,
+                                 (long *)&poly->x1,
+                                 (long *)&poly->x2,
+                                 (long *)&poly->x3,
+                                 &p, &otz, &flg);
+
     if (nclip <= 0) continue;
 
     if ((otz > 0) && (otz < OT_LENGTH)) {
       addPrim(ot[currentBuff][otz], poly);
-      nextprim += sizeof(POLY_G3);
+      nextprim += sizeof(POLY_G4);
     }
   }
   rotation.vx += 6;
