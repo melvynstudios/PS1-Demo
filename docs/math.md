@@ -38,3 +38,15 @@ For example:
 The gap/distance between values is called `ULP` (`U`nit of `L`east `P`recision) and it is not a constant number, as it depends on the value itself.
 
 **NOTE** because we are using 32bits to represent the numbers and the fact that we are using the mantissa notation, it means that we lose exactness.
+
+### Fixed Point Representation
+
+This is basically using integers to represent fractional number systems.  We do this by reserving a fixed number of bits for the integer and another set of bits for the fractional part.
+
+*16.16* fixed point.
+
+![Fixed Point Representation](fixedpointrep.png)
+
+*20.12* fixed point, most commonly used on PS1 games because the registers of the GTE use this format internally.
+
+![Fixed Point Representation](fixedpointrep2.png)
