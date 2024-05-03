@@ -15,7 +15,7 @@ The way we handle numbers on the playstation 1 is to use something similiar to t
 
 (-1)^s^ * 1.M * 2^(E-127)^
 
-[s]|[e][e][e][e][e][e][e][e]|[m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m]
+`[s]|[e][e][e][e][e][e][e][e]|[m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m]`
 
 <space>|<space><space><space>______________________
 <space><space><space>___________________________________________________________________
