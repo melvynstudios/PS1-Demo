@@ -59,6 +59,7 @@ The gap/distance between values is called `ULP` (`U`nit of `L`east `P`recision) 
 ### Fixed Point Representation
 
 This is basically using integers to represent fractional number systems.  We do this by reserving a fixed number of bits for the integer and another set of bits for the fractional part.
+This means that we have a fixed ULP.
 
 *16.16* fixed point.
 
@@ -67,3 +68,23 @@ This is basically using integers to represent fractional number systems.  We do 
 *20.12* fixed point, most commonly used on PS1 games because the registers of the GTE use this format internally.
 
 ![Fixed Point Representation](fixedpointrep2.png)
+
+The resolution for `20.12` is 1 / 2<sup>12</sup>  which is 1/4096 = 0.0009765625\
+This means we will have this in our code:
+
+```c
+#define ONE 4096 /* GTE regards 4096 as 1.0 */
+
+// This is why we set ONE = 4096 in the code above
+fix_num += 4096;   // += 1.0
+fix_num -= 4096;   // -= 1.0
+fix_num += 2048;   // += 0.5
+fix_num -= 6144;   // -= 1.5
+```
+
+What this means is that if we do a printf we might see some really high number for example:\
+position.vx = 9912.9\
+However, what we need to divide by 4096 in order to get the real value.
+
+Something like this works in code:  position.vx >> 12 = 242
+
