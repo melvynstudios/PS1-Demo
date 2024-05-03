@@ -3,7 +3,7 @@
 I wanted to have some notes when it comes to doing math on the playstation 1.  The PS1 has some unique limitations due to the age of the hardward.
 
 Due to the 32 bit processor, the registers are only 32 bits , which means we have 32 bits to represent the all the possible numbers in our game.\
-This give us a limit of 4,294,976,296 or `2^32^` so we have to represent our real numbers like integers and decimals within this range.
+This give us a limit of 4,294,976,296 or __2<sup>32</sup>__ so we have to represent our real numbers like integers and decimals within this range.
 
 <----------------------|---------------------->\
 &nbsp;
@@ -23,7 +23,7 @@ This give us a limit of 4,294,976,296 or `2^32^` so we have to represent our rea
 
 The way we handle numbers on the playstation 1 is to use something similiar to the scientific notation you find on a calculator.
 
-(-1)^s^ * 1.M * 2^(E-127)^
+(-1)<sup>s</sup> * 1.M * 2<sup>(E-127)</sup>
 
 [s]|[e][e][e][e][e][e][e][e]|[m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m]\
 &nbsp;
