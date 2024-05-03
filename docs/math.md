@@ -7,7 +7,16 @@ This give us a limit of 4,294,976,296 or `2^32^` so we have to represent our rea
 
 <----------------------|---------------------->\
 &nbsp;
--7 -6 -5 -4 -3 -2 -1  0  1  2  3  4  5  6  7 ...\
+-7 -6 -5 -4 -3 -2 -1
+&nbsp;
+0 &nbsp;
+1 &nbsp;
+2 &nbsp;
+3 &nbsp;
+4 &nbsp;
+5 &nbsp;
+6 &nbsp;
+7 &nbsp; ...\
 <-- Negative Nums -- Origin -- Positive Nums -->\
 
 ## Number notation
