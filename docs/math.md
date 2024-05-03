@@ -27,14 +27,14 @@ The way we handle numbers on the playstation 1 is to use something similiar to t
 
 [s]|[e][e][e][e][e][e][e][e]|[m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m]\
 &nbsp;
-|   ______________________   ___________________________________________________________________\
+| &nbsp;&nbsp;&nbsp; ______________________ &nbsp;&nbsp;&nbsp; ___________________________________________________________________\
 sign
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Exponent
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mantissa\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mantissa
 
 This is the IEEE754 standard for handling numbers.
 
