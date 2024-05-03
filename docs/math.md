@@ -17,9 +17,14 @@ The way we handle numbers on the playstation 1 is to use something similiar to t
 
 [s]|[e][e][e][e][e][e][e][e]|[m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m][m]
 
- |   ______________________   ___________________________________________________________________
+<space>|<space><space><space>______________________
+<space><space><space>___________________________________________________________________
 
-sign      Exponent                                             Mantissa
+sign<space><space><space><space><space><space>Exponent
+<space><space><space><space><space><space><space><space><space><space><space><space>
+<space><space><space><space><space><space><space><space><space><space><space><space>
+<space><space><space><space><space><space><space><space><space><space><space><space>
+<space><space><space><space><space><space><space><space><space>Mantissa
 
 This is the IEEE754 standard for handling numbers.
 
