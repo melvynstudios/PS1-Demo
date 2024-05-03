@@ -21,3 +21,20 @@ sign      Exponent                                             Mantissa
 
 This is the IEEE754 standard for handling numbers.
 
+## Floating point resolution
+
+Floating points have different resolutions, which is just the shortest distance between two values that can be represented exactly.
+
+For example:
+
+[0]`.`[0] [0] [7]  This has a resolution of 0.001
+
+[4] [6]`.`[2] [3]  Resolution is 0.01
+
+[7] [7] [5]`.`[8]  Resolution is 0.1
+
+[3] [0] [7] [1]`.`  Integer resolution
+
+The gap/distance between values is called `ULP` (`U`nit of `L`east `P`recision) and it is not a constant number, as it depends on the value itself.
+
+**NOTE** because we are using 32bits to represent the numbers and the fact that we are using the mantissa notation, it means that we lose exactness.
