@@ -88,3 +88,39 @@ However, what we need to divide by 4096 in order to get the real value.
 
 Something like this works in code:  position.vx >> 12 = 242
 
+*NOTE:* Some people call this the scale of the fix point representation.
+
+```c
+#define ONE 4096
+
+// Fractional addition and subtraction works as expected
+long a = 20 * ONE;     // ToFixed(20)
+long b = 17 * ONE;     // ToFixed(17)
+long c = a + b;        // Addition and subtraction just works
+
+// Fractional multiplication is different
+mul = 2048;                        // This is our multiplier, or 0.5
+fix_num = (fix_num * mul) >> 12;   //  Shift right by 12
+
+mul = 6144;                        // This is our multiplier, or 1.5
+fix_num = (fix_num * mul) >> 12;   //  Shift right by 12
+
+// Fractional division
+div = 2048;                        // This is our divisor, or 0.5
+fix_num = (fix_num * ONE) / div >> 12;   //  Shift right by 12
+
+div = 6144;                              // This is our divisor, or 1.5
+fix_num = (fix_num * ONE) / div >> 12;   //  fix_num /= div
+```
+
+We shift out of the 12 bytes because they are part of the fractional part, which is the underflow.  So we get rid of the underflow, which leaves us with the 32 bit number that we need for the PS1.
+We are going to try and multiply by the binary numbers like 2 or 4 so that we can leverage bit shifting instead of CPU intensive operations.
+
+Example:\
+position->vx >>= 1;  // Shift right by 1 which is equivalent to multiply by 2
+position->vy >>= 1;
+position->vz >>= 1;
+
+## Appendix
+
+The PS1 Games we are creating with use the 20.12 fixed point format.
