@@ -175,12 +175,12 @@ void Update(void) {
     pos.vy *= -1;
   }
 
-  RotMatrix(&rotation, &world);
-  TransMatrix(&world, &translation);
-  ScaleMatrix(&world, &scale);
+  RotMatrix(&rotation, &world);   // Populate the world maxtrix with the current rotation values
+  TransMatrix(&world, &pos);      // Populate the world matrix with the current translation or position
+  ScaleMatrix(&world, &scale);    // Populate the world matrix with the current scale
 
-  SetRotMatrix(&world);
-  SetTransMatrix(&world);
+  SetRotMatrix(&world);             // Sets the rotation matrix to be used ty the GTE
+  SetTransMatrix(&world);           // Sets the translation matrix to be used by the GTE
 
   // Loop all triangle faces
   for (int i = 0; i < NUM_FACES * 4; i += 4) {
