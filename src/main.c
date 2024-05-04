@@ -11,7 +11,7 @@
 #define SCREEN_CENTER_Y (SCREEN_RES_Y >> 1)
 #define SCREEN_Z 320
 
-#define OT_LENGTH 256
+#define OT_LENGTH 2048
 #define NUM_VERTICES 8
 #define NUM_FACES 6
 
@@ -70,6 +70,10 @@ VECTOR  translation = {0, 0, 900};
 VECTOR  scale       = {ONE, ONE, ONE};
 
 MATRIX world = {0};
+
+VECTOR vel = {0, 0, 0};
+VECTOR acc = {0, 0, 0};
+VECTOR pos = {0, 0, 0};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Initialize the display mode and setup double buffering
@@ -133,6 +137,22 @@ void Setup(void) {
   ScreenInit();
 
   nextprim = primbuff[currentBuff];
+
+  // Initialize the acceleration
+  acc.vx = 0;
+  acc.vy = 1;     // gravity
+  acc.vz = 0;
+
+  // Initialize the velocity
+  vel.vx = 0;
+  vel.vy = 0;
+  vel.vz = 0;
+
+  // Initialize the position
+  pos.vx = 0;
+  pos.vy = -400;
+  pos.vz = 1800;
+
 }
 
 void Update(void) {
@@ -141,6 +161,19 @@ void Update(void) {
 
   // Empty the ordering table
   ClearOTagR(ot[currentBuff], OT_LENGTH);
+
+  // Update the position using position and velocity
+  vel.vx += acc.vx;
+  vel.vy += acc.vy;
+  vel.vz += acc.vz;
+
+  pos.vx += vel.vx;
+  pos.vy += vel.vy;
+  pos.vz += vel.vz;
+
+  if (pos.vy > 400) {
+    pos.vy *= -1;
+  }
 
   RotMatrix(&rotation, &world);
   TransMatrix(&world, &translation);
