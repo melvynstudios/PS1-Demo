@@ -57,7 +57,7 @@ typedef struct {
 } DoubleBuff;
 
 DoubleBuff screen;
-short currentBuff;  // 0 or 1 which contains the curren buffer.  We swap the buffers on the backend
+u_short currentBuff;  // 0 or 1 which contains the curren buffer.  We swap the buffers on the backend
 
 u_long ot[2][OT_LENGTH]; // ordering table
 char primbuff[2][2048];  // the primitive buffer for the ordering table
@@ -138,17 +138,15 @@ void Setup(void) {
 
   nextprim = primbuff[currentBuff];
 
-  // Initialize the acceleration
+
   acc.vx = 0;
-  acc.vy = 1;     // gravity
+  acc.vy = 1;
   acc.vz = 0;
 
-  // Initialize the velocity
   vel.vx = 0;
   vel.vy = 0;
   vel.vz = 0;
 
-  // Initialize the position
   pos.vx = 0;
   pos.vy = -400;
   pos.vz = 1800;
@@ -162,17 +160,19 @@ void Update(void) {
   // Empty the ordering table
   ClearOTagR(ot[currentBuff], OT_LENGTH);
 
-  // Update the position using position and velocity
+  // Update the velocity based on the acceleration
   vel.vx += acc.vx;
   vel.vy += acc.vy;
   vel.vz += acc.vz;
 
-  pos.vx += vel.vx;
-  pos.vy += vel.vy;
-  pos.vz += vel.vz;
+  // Update the position based on the velocity
+  pos.vx += (vel.vx >> 1);
+  pos.vy += (vel.vy >> 1);
+  pos.vz += (vel.vz >> 1);
 
-  if (pos.vy > 400) {
-    pos.vy *= -1;
+  // Bounce and flip the velocity if we reach the bottom part of the screen
+  if (pos.vy > 800) {
+    vel.vy *= -1;
   }
 
   RotMatrix(&rotation, &world);   // Populate the world maxtrix with the current rotation values
