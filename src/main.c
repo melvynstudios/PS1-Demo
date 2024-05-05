@@ -244,8 +244,8 @@ void Update(void) {
     }
   }
   // cube.rotation.vz += 12;
-  // cube.rotation.vx += 6;
-  cube.rotation.vy += 20;
+  cube.rotation.vx += 30;
+  cube.rotation.vy += 10;
 
   // Add the floor
   RotMatrix(&fl.rotation, &world);
