@@ -20,6 +20,7 @@ typedef struct Cube {
   SVECTOR rotation;
   VECTOR position;
   VECTOR scale;
+  VECTOR velocity;
   VECTOR accel;
   SVECTOR vertices[8];
   short faces[24];
@@ -88,9 +89,37 @@ VECTOR  scale       = {ONE, ONE, ONE};
 
 MATRIX world = {0};
 
-VECTOR vel = {0, 0, 0};
-VECTOR acc = {0, 0, 0};
-VECTOR pos = {0, 0, 0};
+Cube cube = {{0, 0, 0},
+             {0, -400, 1800},
+             {ONE, ONE, ONE},
+             {0, 0, 0},
+             {0, 1, 0},
+             {{-128, -128, -128},
+              {128, -128, -128},
+              {128, -128, 128},
+              {-128, -128, 128},
+              {-128, 128, -128},
+              {128, 128, -128},
+              {128, 128, 128},
+              {-128, 128, 128}},
+             {
+            3, 2, 0, 1,
+            0, 1, 4, 5,
+            4, 5, 7, 6,
+           1, 2, 5, 6,
+           2, 3, 6, 7,
+           3, 0, 7, 4,}
+};
+
+Floor floor = {{0, 0, 0},
+               {0, 450, 1800},
+               {ONE, ONE, ONE},
+               {{-900, 0, -900}, {-900, 0, 900}, {900, 0, -900}, {900, 0, 900}},
+               {
+                   0, 1, 2,
+                   1, 3, 2,
+    }
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Initialize the display mode and setup double buffering
