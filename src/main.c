@@ -12,9 +12,26 @@
 #define SCREEN_Z 320
 
 #define OT_LENGTH 2048
-#define NUM_VERTICES 8
-#define NUM_FACES 6
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Vertices and faces
+///////////////////////////////////////////////////////////////////////////////////////////////////
+typedef struct Cube {
+  SVECTOR rotation;
+  VECTOR position;
+  VECTOR scale;
+  VECTOR accel;
+  SVECTOR vertices[8];
+  short faces[24];
+} Cube;
+
+typedef struct FLOOR {
+  SVECTOR rotation;
+  VECTOR position;
+  VECTOR scale;
+  SVECTOR vertices[4];
+  short faces[6];
+} Floor;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Cube vertices and face indices
