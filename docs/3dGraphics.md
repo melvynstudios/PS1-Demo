@@ -168,3 +168,124 @@ void Update(void) {
 	nextprim += sizeof(POLY_F3);
 }
 ```
+
+## GTE Register Set
+
+The General Transformation Engine (GTE) has 32 general or data registers.
+
+### Vector Value registers
+- VX0
+- VX1
+- VX2
+- VY0
+- VY1
+- VY2
+- VZ0
+- VZ1
+- VZ2
+
+### Color Value registers
+- R
+- G
+- B
+- CD
+
+### Intermediate result registers
+- IR0
+- IR1
+- IR2
+- IR3
+
+### Screen coordinate registers
+- SX0
+- SX1
+- SX2
+- SY0
+- SY1
+- SY2
+
+# OTZ Ordering Table Register
+- OTZ
+
+# OUTPUT registers
+- MAC0
+- MAC1
+- MAC2
+- MAC3
+
+## 32 control registers
+
+Rotation and Translation registers make up the world matrix.
+
+### Rotation value registers
+- R11
+- R12
+- R12
+- R21
+- R22
+- R23
+- R31
+- R32
+- R33
+
+### Translation vector registers
+- TRX
+- TRY
+- TRZ
+
+### Lighting Direction registers
+- L11
+- L12
+- L13
+- L21
+- L22
+- L23
+- L31
+- L32
+- L33
+
+### Lighting Color registers
+- LR1
+- LR2
+- LR3
+- LG1
+- LG2
+- LG3
+- LB1
+- LB2
+- LB3
+
+### Background Color registers
+- RBK
+- GBK
+- BBK
+
+#### Instruction Set
+
+The GTE is not memory mapped, so reading and writing values to and from the GTE requires that we use special assembly instructions.
+
+Example:
+
+```asm
+RotTransPers3:
+	lwc2 C2_VXY0, ($a0)   // Load Word Coprocessor 2
+	lwc2 C2_VZ0, 4($a0)   // load z0 vector value
+	lwc2 C2_VXY1, ($a1)   // load Y1 vector
+	lwc2 C2_VZ1, 4($a1)   // load Z1 vector
+	lwc2 C2_VXY2, ($a2)   // load Y2 vector
+	lwc2 C2_VZ2, 4($a2)   // load Z2 vector
+	nop
+	RTPT                 // Rotate, Translate, Perspective Three, code above loads three vertices.
+	lw $t0, 16($sp)
+	lw $t1, 20($sp)
+	lw $t2, 24($sp)
+	lw $t3, 28($sp)
+	swc2 C2_SXY0, ($a3)  // Store Word from Coprocessor 2 to screen X and Y
+	swc2 C2_SXY1, ($t0)  // Output screen coordinates
+	swc2 C2_SXY2, ($t1)  // Output screen coordinates
+	swc2 C2_IR0, ($t2)   // Output intermediate results
+	cfc2 $v1, C2_FLAG0
+	mfc2 $v0, CW_SZ2
+	j $ra
+	sra $v0, $v0, 2
+```
