@@ -50,6 +50,10 @@ Division is expecially time consuming in older processors.
 
 ### Appendix
 
+Checkout the inline_n.h, because the functions are are helpers for sending messages to the gte.
+
+You will see the following code which is assembly being invoked by C.
+
 ```c
 // Can you use assembly this way?
 #define gte_ld_intpol_vbl(r0)  \

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "inline_n.h"
 #include <sys/types.h>
 #include <libgte.h>
 #include <libetc.h>
@@ -194,6 +195,7 @@ void Update(void) {
 
   // Draw the objects, start with the cube
   for (int i = 0; i < (6 * 4); i += 4) {
+    int nclip;
     polyg4 = (POLY_G4 *)nextprim;
     setPolyG4(polyg4);
     setRGB0(polyg4, 255, 0, 255);
@@ -201,17 +203,36 @@ void Update(void) {
     setRGB2(polyg4, 0, 255, 255);
     setRGB3(polyg4, 0, 255, 0);
 
+    // Load the first three vertices of the face into the GTE
+    gte_ldv0(&cube.vertices[cube.faces[i + 0]]);
+    gte_ldv1(&cube.vertices[cube.faces[i + 1]]);
+    gte_ldv2(&cube.vertices[cube.faces[i + 2]]);
+    // GTE can only handle 3 vertices at a time
+    gte_rtpt();
+
+    // Store first vertex of the transformed face
+    gte_stsxy0(&polyg4->x0);
+    // Load the 4th vertex of the face into the GTE
+    gte_ldv0(&cube.vertices[cube.faces[i + 3]]);
+    // Transform the last vertex
+    gte_rtps();
+
+    // Store the the last vertex of the transformed face
+    gte_stsxy3(&polyg4->x1, &polyg4->x2, &polyg4->x3);
+    gte_avsz4();
+    gte_stotz(&otz);
+
     // backface culling or normal clipping is a technique where we only render faces that are towards the camera.
     // we will discard rendering triangles that are not facing the camera
-    int nclip = RotAverageNclip4(&cube.vertices[cube.faces[i + 0]],
-                                 &cube.vertices[cube.faces[i + 1]],
-                                 &cube.vertices[cube.faces[i + 2]],
-                                 &cube.vertices[cube.faces[i + 3]],
-                                 (long *)&polyg4->x0,
-                                 (long *)&polyg4->x1,
-                                 (long *)&polyg4->x2,
-                                 (long *)&polyg4->x3,
-                                 &p, &otz, &flg);
+    // int nclip = RotAverageNclip4(&cube.vertices[cube.faces[i + 0]],
+    //                              &cube.vertices[cube.faces[i + 1]],
+    //                              &cube.vertices[cube.faces[i + 2]],
+    //                              &cube.vertices[cube.faces[i + 3]],
+    //                              (long *)&polyg4->x0,
+    //                              (long *)&polyg4->x1,
+    //                              (long *)&polyg4->x2,
+    //                              (long *)&polyg4->x3,
+    //                              &p, &otz, &flg);
 
     if (nclip <= 0) continue;
 
