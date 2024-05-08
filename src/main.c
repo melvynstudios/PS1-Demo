@@ -209,18 +209,21 @@ void Update(void) {
     gte_ldv2(&cube.vertices[cube.faces[i + 2]]);
     // GTE can only handle 3 vertices at a time
     gte_rtpt();
+    gte_nclip();
+    gte_stopz(&nclip);
 
-    // Store first vertex of the transformed face
-    gte_stsxy0(&polyg4->x0);
-    // Load the 4th vertex of the face into the GTE
-    gte_ldv0(&cube.vertices[cube.faces[i + 3]]);
-    // Transform the last vertex
-    gte_rtps();
-
-    // Store the the last vertex of the transformed face
-    gte_stsxy3(&polyg4->x1, &polyg4->x2, &polyg4->x3);
-    gte_avsz4();
-    gte_stotz(&otz);
+    // Check nclip, since quad vertices are coplanar
+    if (nclip >= 0) {
+      // Store first 3 vertex of the transformed face
+      gte_stsxy0(&polyg4->x0);
+      // Load the 4th vertex of the face into the GTE
+      gte_ldv0(&cube.vertices[cube.faces[i + 3]]);
+      // Transform the last vertex
+      gte_rtps();
+      // Store the the last vertex of the transformed face
+      gte_stsxy3(&polyg4->x1, &polyg4->x2, &polyg4->x3);
+      gte_avsz4();
+      gte_stotz(&otz);
 
     // backface culling or normal clipping is a technique where we only render faces that are towards the camera.
     // we will discard rendering triangles that are not facing the camera
@@ -234,11 +237,10 @@ void Update(void) {
     //                              (long *)&polyg4->x3,
     //                              &p, &otz, &flg);
 
-    if (nclip <= 0) continue;
-
-    if ((otz > 0) && (otz < OT_LENGTH)) {
-      addPrim(ot[currentBuff][otz], polyg4);
-      nextprim += sizeof(POLY_G4);
+      if ((otz > 0) && (otz < OT_LENGTH)) {
+        addPrim(ot[currentBuff][otz], polyg4);
+        nextprim += sizeof(POLY_G4);
+      }
     }
   }
   // cube.rotation.vz += 12;
