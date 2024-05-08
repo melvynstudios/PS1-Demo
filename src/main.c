@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "inline_n.h"
 #include <sys/types.h>
 #include <libgte.h>
@@ -61,6 +60,8 @@ char *nextprim;          // pointer to next primitive in the buffer
 
 POLY_G4 *polyg4;
 POLY_F3 *polyf3;
+
+u_long padstate;         // 32 bit number that holds the state of the joypad
 
 SVECTOR rotation    = {0, 0, 0};
 VECTOR  translation = {0, 0, 900};
@@ -161,6 +162,8 @@ void DisplayFrame(void) {
 void Setup(void) {
   ScreenInit();
 
+  PadInit(0);  // Initialize the pad
+
   nextprim = primbuff[currentBuff];
 }
 
@@ -170,6 +173,17 @@ void Update(void) {
 
   // Empty the ordering table
   ClearOTagR(ot[currentBuff], OT_LENGTH);
+
+  // Read Controller state and update state
+  padstate = PadRead(0);
+
+  if (padstate & _PAD(0, PADLleft)) {
+    cube.rotation.vy += 20;
+  }
+  if (padstate & _PAD(0, PADLright)) {
+    cube.rotation.vy -= 20;
+  }
+  // TODO(melvyn): Add up and down inputs
 
   // Update the velocity based on the acceleration
   cube.velocity.vx += cube.accel.vx;
@@ -243,9 +257,6 @@ void Update(void) {
       }
     }
   }
-  // cube.rotation.vz += 12;
-  cube.rotation.vx += 30;
-  cube.rotation.vy += 10;
 
   // Add the floor
   RotMatrix(&fl.rotation, &world);

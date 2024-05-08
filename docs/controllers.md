@@ -51,3 +51,7 @@ sending and receiving packets, send a singal to the interrupt controller wheneve
 The playstation 1 also has helpers in the BIOS, BIOS Routines, which simplifies things (reads joypad state on VSYNC)
 
 The Psy-Q has a library called `LIBETC.H` which provides the functions to read the joypad input.
+
+### LIBETC.H
+
+The function `extern int PadIdentifiers` is used to read the joypad input state.
