@@ -47,3 +47,14 @@ n / 16 = n >> 4
 n / 32 = n >> 5
 
 Division is expecially time consuming in older processors.
+
+### Appendix
+
+```c
+// Can you use assembly this way?
+#define gte_ld_intpol_vbl(r0)  \
+  __asm__ volatile(            \
+		"lbu    $12, 0( %0 );"     \
+		"lbu    $13, 1( %0 );"     \
+	) ...
+```

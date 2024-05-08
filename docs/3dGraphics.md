@@ -284,8 +284,8 @@ RotTransPers3:
 	swc2 C2_SXY1, ($t0)  // Output screen coordinates
 	swc2 C2_SXY2, ($t1)  // Output screen coordinates
 	swc2 C2_IR0, ($t2)   // Output intermediate results
-	cfc2 $v1, C2_FLAG0
-	mfc2 $v0, CW_SZ2
+	cfc2 $v1, C2_FLAG0   // Copy from Coprocessor 2 Control Register to main cpu register
+	mfc2 $v0, CW_SZ2     // Same as above but moves from a data register to main cpu register
 	j $ra
-	sra $v0, $v0, 2
+	sra $v0, $v0, 2      // Shift right arithmatic, divide by 4
 ```
