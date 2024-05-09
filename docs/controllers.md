@@ -109,4 +109,60 @@ Main:
 	la $a1, PadBuffer       ; Set Pad Buffer address to automatically update each frame
 	jalr $t2                ; Jump to BIOS Routine
 	nop
+
+	; ------------------------------------------------------------------------
+	; Set $a0 as the global parameter with the IO_BASE_ADDR to be used by subs
+	; ------------------------------------------------------------------------
+	lui $a0, IO_BASE_ADDR           ; Global Param: I/O Port Base Address (0x1F80****)
+
+	; ------------------------------------------------------------------------
+	; Send commands to the GP1 (mapped at 0x1f801814)
+	; The GP1 is for display control and environment setup
+	; (Command = 8-Bit MSB, Parameter = 24-Bit LSB)
+	; CCPPPPPP: CC=Command, PPPPPP=Parameter
+	; ------------------------------------------------------------------------
+	li $t1, 0x00000000       ; 00 = Reset GPU
+	sw $t1, GP1($a0)         ; Write to GP1
+
+	li $t1, 0x03000000       ; 00 = Display enable
+	sw $t1, GP1($a0)         ; Write to GP1
+
+	li $t1, 0x08000000       ; 00 = Display mode (320x240, 15-bit, NTSC)
+	sw $t1, GP1($a0)         ; Write to GP1
+
+	li $ti, 0x06C60260       ; 06 = Horz Display Range - 0bxxxxxxxxxxXXXXXXXXXX (3168..608)
+	sw $t1, GP1($a0)         ; Write to GP1
+
+	li $ti, 0x07042018       ; 07 = Vert Display Range - 0byyyyyyyyyYYYYYYYYYY (264..24)
+	sw $t1, GP1($a0)         ; Write to GP1
+
+	; ------------------------------------------------------------------------
+	; Send commands to GP0 (mapped at 0x1f801810)
+	; These GP0 commands are used to setup the drawing area
+	; (Command = 8-Bit MSB, Parameter = 24-Bit LSB)
+	; CCPPPPPP CC=Command PPPPPP=Parameter
+	; ------------------------------------------------------------------------
+	li $t1, 0xE1000400       ; 0E = Draw mode settings
+	sw $t1, GP0($a0)         ; Write to GP0
+
+	li $t1, 0xE3000000       ; E3 = Drawing Area TopLeft - 0bYYYYYYYYYYXXXXXXXXXX (10 bits for Y and X)
+	sw $t1, GP0($a0)         ; Write to GP0
+
+	li $t1, 0xE403BD3F       ; E4 = Drawing area BottomRight - 0bYYYYYYYYYYXXXXXXXXXX (10 bits for X=319 and y=239)
+	sw $t1, GP0($a0)         ; Write to GP0
+
+	li $t1, 0xE5000000       ; E5 = Clear Drawing Area
+	sw $t1, GP0($a0)         ; Write to GP0
+
+Refresh:
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Wait VSYNC & Store XOR Pad Data
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+WaitVSync:
+	li $a1, PadBuffer        ; Load Pad Buffer Address
+Wait:
+	lw $t0, 0($a1)           ; Load Pad Buffer
+	nop						           ; Delay
+	beqz $t0, Wait           ; If (Bad Buffer == 0) Wait NOTE: The moment we get something different from 0, it means we got data or a vsync, this is why we wait until this value is not equal to 0
 ```
