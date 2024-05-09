@@ -63,11 +63,11 @@ This means that we have a fixed ULP.
 
 *16.16* fixed point.
 
-![Fixed Point Representation](fixedpointrep.png)
+![Fixed Point Representation](images/fixedpointrep.png)
 
 *20.12* fixed point, most commonly used on PS1 games because the registers of the GTE use this format internally.
 
-![Fixed Point Representation](fixedpointrep2.png)
+![Fixed Point Representation](images/fixedpointrep2.png)
 
 The resolution for `20.12` is 1 / 2<sup>12</sup>  which is 1/4096 = 0.0009765625\
 This means we will have this in our code:
