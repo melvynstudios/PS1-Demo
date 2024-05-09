@@ -20,7 +20,7 @@ The GTE does this quickly for us on the PS1.
 
 ### Vertices
 
-![vertices](vertices.png)
+![vertices](images/vertices.png)
 
 A cube is a a 3d mesh.  It consists of vertices and faces.  The origin in the image becomes the pivot point, all the vertices are based off the origin of the mesh.  (0, 0, 0)
 
@@ -55,7 +55,7 @@ short faces[] = {
 The faces are indices of how the vertices are connected to make a face or triangle.  Uses clockwise orientation to show that it is pointed towards the camera.  If we use counterclockwise, it would be pointing away from the camera.
 Similarly clockwise orientation would point up, and counterclockwise would point down.  This is how 3d math works.
 
-![faces](faces.png)
+![faces](images/faces.png)
 
 
 
@@ -98,7 +98,7 @@ We have the following primitives:
 
 ### CPU Block Diagram
 
-![CPU Block](CPU-Block.png)
+![CPU Block](images/CPU-Block.png)
 
 ## 3d Transformations
 

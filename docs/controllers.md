@@ -6,7 +6,7 @@ Start with the digital pad which does not have the analog inputs.
 
 Previously the inputs were saved to a memory address, and the console would get the state from the memory address.  Each button would map to a certain bit.
 
-![controller input](./controller_input.png)
+![controller input](images/controller_input.png)
 
 The PS1 controller and its memory card use a serial bus.  Both communicate using a simple packet-based protocol, listening for request packets sent by the console and replying with appropriate responses.
 
@@ -24,7 +24,7 @@ The first byte of each request package is thus the "address" of the peripheral t
 #define CMD_POLL_CONTROLLER  // Read controller state
 ```
 
-![Controller Commands](./controller_input_cmd.png)
+![Controller Commands](images/controller_input_cmd.png)
 
 ```asm
 PAD_L2     equ 0x0001 : Joypad Input: L2          (Bit 0)
@@ -55,3 +55,5 @@ The Psy-Q has a library called `LIBETC.H` which provides the functions to read t
 ### LIBETC.H
 
 The function `extern int PadIdentifiers` is used to read the joypad input state.
+
+![PadIdentifiers](images/joypad_mapping.png)
