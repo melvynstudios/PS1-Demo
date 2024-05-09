@@ -183,7 +183,12 @@ void Update(void) {
   if (padstate & _PAD(0, PADLright)) {
     cube.rotation.vy -= 20;
   }
-  // TODO(melvyn): Add up and down inputs
+  if (padstate & _PAD(0, PADLup)) {
+    cube.rotation.vz += 20;
+  }
+  if (padstate & _PAD(0, PADLdown)) {
+    cube.rotation.vz -= 20;
+  }
 
   // Update the velocity based on the acceleration
   cube.velocity.vx += cube.accel.vx;
