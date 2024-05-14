@@ -165,4 +165,101 @@ Wait:
 	lw $t0, 0($a1)           ; Load Pad Buffer
 	nop						           ; Delay
 	beqz $t0, Wait           ; If (Bad Buffer == 0) Wait NOTE: The moment we get something different from 0, it means we got data or a vsync, this is why we wait until this value is not equal to 0
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Check if Joypad buttons are pressed
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+PressUp:
+	la $a1, PadData         ; Load Input Data Address
+	lw $t0, 0($a1)          ; Load Input Data
+	nop
+	andi $t0, PAD_UP        ; Check if Bit 0 is 1
+	beqz $t0, PressDown     ; If $t0 is = 0, means the button is still up, so we jump to PressDown to check for button press
+	nop
+	; Logic for when the button is pressed down
+	la $t2, YPos
+	lw $t3, 0($t2)
+	nop
+	addiu $t3, $t3, 01      ; YPos--       ; If Y is pressed, we decrease it by 1 or move it down, so game logic is Y-- if pressed
+	sw $t3, 0($t2)
+
+PressDown:
+	la $a1, PadData         ; Load Input Data Address
+	lw $t0, 0($a1)          ; Load Input Data
+	nop
+	andi $t0, PAD_DOWN      ; $t0 = Input Status
+	beqz $t0, PressRight    ; If button-down is not pressed, bypass and dest button right
+	nop
+	; here goes logic for when button up is down:
+	la $t2, YPos
+	lw $t3, 0($t2)
+	nop
+	addiu $t3, $t3, -01     ; YPos++      ; Same as before, if Y is pressed, we increase it by 1 or move it up, so game logic is Y++ if pressed
+	sw $t3, 0($t2)
+
+PressRight:
+	la $a1, PadData         ; Load Input Data Address
+	lw $t0, 0($a1)          ; Load Input Data Word
+	nop
+	andi $t0, PAD_RIGHT     ; $t0 = Input Status
+	beqz $t0, PressLeft     ; If button-right is not pressed, jump to PressLeft to test for left button press
+	nop
+	; Here is the logic for when the button is pressed right:
+	la $t2, XPos
+	lw $t3, 0($t2)
+	nop
+	addiu $t3, $t3, 1       ; XPos++ which increments the x position by 1
+	sw $t3, 0($t2)
+
+PressLeft:
+	la $a1, PadData         ; Load Input Data Address
+	lw $t0, 0($a1)          ; Load Input Data
+	nop
+	andi $t0, PAD_LEFT      ; $t0 = Input Status
+	beqz $t0, EndInputCheck ; If button-left is not pressed, jump to end input check
+	nop
+	; Here is the logic for when the button is pressed left:
+	la $t2, XPos
+	lw $t3, 0($t2)
+	nop
+	addiu $t3, $t3, -1      ; XPos-- which decrements the x position by 1
+	sw $t3, 0($t2)
+
+EndInputCheck:
+
+; --------------------------------------------------------------------------------
+; Clear the screen (draw a rectangle on VRAM).
+; --------------------------------------------------------------------------------
+ClearScreen:
+	li $t1, 0x02422E1B                  ; 02 = Fill rectangle in VRAM (Param Color: 0xBBGGRR)
+	sw $t1, GP0($a0)                    ; Write to GP0
+	li $t1, 0x00000000                  ; Fill Area, Parameter: 0xYYYYXXXX - Topleft (0,0)
+	sw $t1, GP0($a0)                    ; Write to GP0
+	li $t1, 0x00EF013F                  ; Fill Area, Parameter: 0xHHHHWWWW - (Height=239, Width=319)
+	sw $t1, GP0($a0)                    ; Write to GP0
+
+; --------------------------------------------------------------------------------
+; Draw a small rectangle at position XPos, YPos
+; --------------------------------------------------------------------------------
+DrawRectangle:
+	li $t1, 0x00200FF00                 ; 02 = Fill rectangle in VRAM (Param Color: 0xBBGGRR)
+	sw $t1, GP0($a0)                    ; Write to GP0
+	la $t2, YPos
+	lw $t3, 0($t2)
+	nop
+	sll $t3, $t3, 16                    ; YPos <<= 16
+	la $t2, XPos
+	lw $t2, 0($t2)
+	nop
+	andi $t4, $t4, 0xFFFF               ; XPos &= 0xFFFF
+	or $t5, $t3, $t4                    ; YPos | XPos
+	sw $t5, GP0($a0)                    ; Write to GP0 (YYYYXXXX)
+
+	li $t1, 0x00200020                  ; Fill Area, Parameter: 0xYYYYXXXX - Height=32, Width=32
+	sw $t1, GP0($a0)                    ; Write to GP0
+
+	j Refresh
+	nop
 ```
+
+.close
