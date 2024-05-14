@@ -1,8 +1,9 @@
-#include "inline_n.h"
 #include <sys/types.h>
 #include <libgte.h>
 #include <libetc.h>
 #include <libgpu.h>
+#include "inline_n.h"
+#include "joypad.h"
 
 #define VIDEO_MODE 0
 #define SCREEN_RES_X 320
@@ -162,8 +163,6 @@ void DisplayFrame(void) {
 void Setup(void) {
   ScreenInit();
 
-  PadInit(0);  // Initialize the pad
-
   nextprim = primbuff[currentBuff];
 }
 
@@ -173,22 +172,6 @@ void Update(void) {
 
   // Empty the ordering table
   ClearOTagR(ot[currentBuff], OT_LENGTH);
-
-  // Read Controller state and update state
-  padstate = PadRead(0);
-
-  if (padstate & _PAD(0, PADLleft)) {
-    cube.rotation.vy += 20;
-  }
-  if (padstate & _PAD(0, PADLright)) {
-    cube.rotation.vy -= 20;
-  }
-  if (padstate & _PAD(0, PADLup)) {
-    cube.rotation.vz += 20;
-  }
-  if (padstate & _PAD(0, PADLdown)) {
-    cube.rotation.vz -= 20;
-  }
 
   // Update the velocity based on the acceleration
   cube.velocity.vx += cube.accel.vx;
