@@ -62,8 +62,6 @@ char *nextprim;          // pointer to next primitive in the buffer
 POLY_G4 *polyg4;
 POLY_F3 *polyf3;
 
-u_long padstate;         // 32 bit number that holds the state of the joypad
-
 SVECTOR rotation    = {0, 0, 0};
 VECTOR  translation = {0, 0, 900};
 VECTOR  scale       = {ONE, ONE, ONE};
@@ -163,6 +161,10 @@ void DisplayFrame(void) {
 void Setup(void) {
   ScreenInit();
 
+  // Initialize the joypad
+  JoyPadInit();
+
+  // Reset next primitive pointer to the start of the primitive buffer
   nextprim = primbuff[currentBuff];
 }
 
@@ -172,6 +174,20 @@ void Update(void) {
 
   // Empty the ordering table
   ClearOTagR(ot[currentBuff], OT_LENGTH);
+
+  JoyPadUpdate();
+  if (JoyPadCheck(PAD1_LEFT)) {
+    cube.rotation.vy += 20;
+  }
+  if (JoyPadCheck(PAD1_RIGHT)) {
+    cube.rotation.vy -= 20;
+  }
+  if (JoyPadCheck(PAD1_UP)) {
+    cube.rotation.vz += 20;
+  }
+  if (JoyPadCheck(PAD1_DOWN)) {
+    cube.rotation.vz -= 20;
+  }
 
   // Update the velocity based on the acceleration
   cube.velocity.vx += cube.accel.vx;

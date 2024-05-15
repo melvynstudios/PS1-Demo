@@ -1,4 +1,8 @@
 #include "joypad.h"
+#include <sys/types.h>
+#include <libetc.h>
+
+static u_long padstate;
 
 int JoyPadCheck(int p) { return padstate & p; }
 
