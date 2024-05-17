@@ -3,6 +3,7 @@
 #include <libetc.h>
 #include <libgpu.h>
 #include "inline_n.h"
+#include "globals.h"
 #include "joypad.h"
 
 #define VIDEO_MODE 0
@@ -11,8 +12,6 @@
 #define SCREEN_CENTER_X (SCREEN_RES_X >> 1) // bit shifting for division, this is divided by 2
 #define SCREEN_CENTER_Y (SCREEN_RES_Y >> 1)
 #define SCREEN_Z 320
-
-#define OT_LENGTH 2048
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Vertices and faces
@@ -54,10 +53,6 @@ typedef struct {
 
 DoubleBuff screen;
 u_short currentBuff;  // 0 or 1 which contains the curren buffer.  We swap the buffers on the backend
-
-u_long ot[2][OT_LENGTH]; // ordering table
-char primbuff[2][2048];  // the primitive buffer for the ordering table
-char *nextprim;          // pointer to next primitive in the buffer
 
 POLY_G4 *polyg4;
 POLY_F3 *polyf3;
@@ -149,13 +144,13 @@ void DisplayFrame(void) {
   PutDrawEnv(&screen.draw[currentBuff]);
 
   // Draw the ordering table for the current buffer
-  DrawOTag(ot[currentBuff] + OT_LENGTH - 1);
+  DrawOTag(GetOTAt(currentBuff, OT_LENGTH - 1));
 
   // Swaps the buffers
   currentBuff = !currentBuff;
 
   // Reset next primitive pointer to the start of the primitive buffer
-  nextprim = primbuff[currentBuff];
+  ResetNextPrim(currentBuff);
 }
 
 void Setup(void) {
@@ -165,7 +160,7 @@ void Setup(void) {
   JoyPadInit();
 
   // Reset next primitive pointer to the start of the primitive buffer
-  nextprim = primbuff[currentBuff];
+  ResetNextPrim(currentBuff);
 }
 
 void Update(void) {
@@ -173,7 +168,7 @@ void Update(void) {
   long otz, p, flg;
 
   // Empty the ordering table
-  ClearOTagR(ot[currentBuff], OT_LENGTH);
+  EmptyOT(currentBuff);
 
   JoyPadUpdate();
   if (JoyPadCheck(PAD1_LEFT)) {
