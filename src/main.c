@@ -209,7 +209,7 @@ void Update(void) {
   // Draw the objects, start with the cube
   for (int i = 0; i < (6 * 4); i += 4) {
     int nclip;
-    polyg4 = (POLY_G4 *)nextprim;
+    polyg4 = (POLY_G4 *) GetNextPrim();
     setPolyG4(polyg4);
     setRGB0(polyg4, 255, 0, 255);
     setRGB1(polyg4, 255, 255, 0);
@@ -240,19 +240,9 @@ void Update(void) {
 
     // backface culling or normal clipping is a technique where we only render faces that are towards the camera.
     // we will discard rendering triangles that are not facing the camera
-    // int nclip = RotAverageNclip4(&cube.vertices[cube.faces[i + 0]],
-    //                              &cube.vertices[cube.faces[i + 1]],
-    //                              &cube.vertices[cube.faces[i + 2]],
-    //                              &cube.vertices[cube.faces[i + 3]],
-    //                              (long *)&polyg4->x0,
-    //                              (long *)&polyg4->x1,
-    //                              (long *)&polyg4->x2,
-    //                              (long *)&polyg4->x3,
-    //                              &p, &otz, &flg);
-
       if ((otz > 0) && (otz < OT_LENGTH)) {
-        addPrim(ot[currentBuff][otz], polyg4);
-        nextprim += sizeof(POLY_G4);
+        addPrim(GetOTAt(currentBuff, otz), polyg4);
+        IncrementNextPrim(sizeof(POLY_G4));
       }
     }
   }
@@ -265,7 +255,7 @@ void Update(void) {
   SetTransMatrix(&world);
 
   for (int i = 0; i < (2 * 3); i += 3) {
-    polyf3 = (POLY_F3 *)nextprim;
+    polyf3 = (POLY_F3 *) GetNextPrim();
     setPolyF3(polyf3);
     setRGB0(polyf3, 255, 255, 255);
     int nclip = RotAverageNclip3(
@@ -276,8 +266,8 @@ void Update(void) {
     if (nclip <= 0)
       continue;
     if ((otz > 0) && (otz < OT_LENGTH)) {
-      addPrim(ot[currentBuff][otz], polyf3);
-      nextprim += sizeof(POLY_F3);
+      addPrim(GetOTAt(currentBuff, otz), polyf3);
+      IncrementNextPrim(sizeof(POLY_F3));
     }
   };
 }

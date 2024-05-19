@@ -1,6 +1,8 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
+#include <sys/types.h>
+
 #define OT_LENGTH 8192
 #define PRIMBUFF_LENGTH 131072
 
