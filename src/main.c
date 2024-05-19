@@ -1,8 +1,10 @@
-#include "inline_n.h"
 #include <sys/types.h>
 #include <libgte.h>
 #include <libetc.h>
 #include <libgpu.h>
+#include "inline_n.h"
+#include "globals.h"
+#include "joypad.h"
 
 #define VIDEO_MODE 0
 #define SCREEN_RES_X 320
@@ -10,8 +12,6 @@
 #define SCREEN_CENTER_X (SCREEN_RES_X >> 1) // bit shifting for division, this is divided by 2
 #define SCREEN_CENTER_Y (SCREEN_RES_Y >> 1)
 #define SCREEN_Z 320
-
-#define OT_LENGTH 2048
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Vertices and faces
@@ -54,14 +54,8 @@ typedef struct {
 DoubleBuff screen;
 u_short currentBuff;  // 0 or 1 which contains the curren buffer.  We swap the buffers on the backend
 
-u_long ot[2][OT_LENGTH]; // ordering table
-char primbuff[2][2048];  // the primitive buffer for the ordering table
-char *nextprim;          // pointer to next primitive in the buffer
-
 POLY_G4 *polyg4;
 POLY_F3 *polyf3;
-
-u_long padstate;         // 32 bit number that holds the state of the joypad
 
 SVECTOR rotation    = {0, 0, 0};
 VECTOR  translation = {0, 0, 900};
@@ -150,21 +144,23 @@ void DisplayFrame(void) {
   PutDrawEnv(&screen.draw[currentBuff]);
 
   // Draw the ordering table for the current buffer
-  DrawOTag(ot[currentBuff] + OT_LENGTH - 1);
+  DrawOTag(GetOTAt(currentBuff, OT_LENGTH - 1));
 
   // Swaps the buffers
   currentBuff = !currentBuff;
 
   // Reset next primitive pointer to the start of the primitive buffer
-  nextprim = primbuff[currentBuff];
+  ResetNextPrim(currentBuff);
 }
 
 void Setup(void) {
   ScreenInit();
 
-  PadInit(0);  // Initialize the pad
+  // Initialize the joypad
+  JoyPadInit();
 
-  nextprim = primbuff[currentBuff];
+  // Reset next primitive pointer to the start of the primitive buffer
+  ResetNextPrim(currentBuff);
 }
 
 void Update(void) {
@@ -172,21 +168,19 @@ void Update(void) {
   long otz, p, flg;
 
   // Empty the ordering table
-  ClearOTagR(ot[currentBuff], OT_LENGTH);
+  EmptyOT(currentBuff);
 
-  // Read Controller state and update state
-  padstate = PadRead(0);
-
-  if (padstate & _PAD(0, PADLleft)) {
+  JoyPadUpdate();
+  if (JoyPadCheck(PAD1_LEFT)) {
     cube.rotation.vy += 20;
   }
-  if (padstate & _PAD(0, PADLright)) {
+  if (JoyPadCheck(PAD1_RIGHT)) {
     cube.rotation.vy -= 20;
   }
-  if (padstate & _PAD(0, PADLup)) {
+  if (JoyPadCheck(PAD1_UP)) {
     cube.rotation.vz += 20;
   }
-  if (padstate & _PAD(0, PADLdown)) {
+  if (JoyPadCheck(PAD1_DOWN)) {
     cube.rotation.vz -= 20;
   }
 
@@ -215,7 +209,7 @@ void Update(void) {
   // Draw the objects, start with the cube
   for (int i = 0; i < (6 * 4); i += 4) {
     int nclip;
-    polyg4 = (POLY_G4 *)nextprim;
+    polyg4 = (POLY_G4 *) GetNextPrim();
     setPolyG4(polyg4);
     setRGB0(polyg4, 255, 0, 255);
     setRGB1(polyg4, 255, 255, 0);
@@ -246,19 +240,9 @@ void Update(void) {
 
     // backface culling or normal clipping is a technique where we only render faces that are towards the camera.
     // we will discard rendering triangles that are not facing the camera
-    // int nclip = RotAverageNclip4(&cube.vertices[cube.faces[i + 0]],
-    //                              &cube.vertices[cube.faces[i + 1]],
-    //                              &cube.vertices[cube.faces[i + 2]],
-    //                              &cube.vertices[cube.faces[i + 3]],
-    //                              (long *)&polyg4->x0,
-    //                              (long *)&polyg4->x1,
-    //                              (long *)&polyg4->x2,
-    //                              (long *)&polyg4->x3,
-    //                              &p, &otz, &flg);
-
       if ((otz > 0) && (otz < OT_LENGTH)) {
-        addPrim(ot[currentBuff][otz], polyg4);
-        nextprim += sizeof(POLY_G4);
+        addPrim(GetOTAt(currentBuff, otz), polyg4);
+        IncrementNextPrim(sizeof(POLY_G4));
       }
     }
   }
@@ -271,7 +255,7 @@ void Update(void) {
   SetTransMatrix(&world);
 
   for (int i = 0; i < (2 * 3); i += 3) {
-    polyf3 = (POLY_F3 *)nextprim;
+    polyf3 = (POLY_F3 *) GetNextPrim();
     setPolyF3(polyf3);
     setRGB0(polyf3, 255, 255, 255);
     int nclip = RotAverageNclip3(
@@ -282,8 +266,8 @@ void Update(void) {
     if (nclip <= 0)
       continue;
     if ((otz > 0) && (otz < OT_LENGTH)) {
-      addPrim(ot[currentBuff][otz], polyf3);
-      nextprim += sizeof(POLY_F3);
+      addPrim(GetOTAt(currentBuff, otz), polyf3);
+      IncrementNextPrim(sizeof(POLY_F3));
     }
   };
 }
