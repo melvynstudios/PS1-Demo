@@ -89,64 +89,6 @@ Floor fl = {{0, 0, 0},
                }
 };
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// Initialize the display mode and setup double buffering
-///////////////////////////////////////////////////////////////////////////////////////////////////
-void ScreenInit(void) {
-  // Reset GPU
-  ResetGraph(0);
-
-  // Set the display area of the first buffer
-  SetDefDispEnv(&screen.disp[0], 0, 0, SCREEN_RES_X, SCREEN_RES_Y);
-  SetDefDrawEnv(&screen.draw[0], 0, 240, SCREEN_RES_X, SCREEN_RES_Y);
-
-  // Set the display area of the second buffer, the inverse of the first buffer
-  SetDefDispEnv(&screen.disp[1], 0, 240, SCREEN_RES_X, SCREEN_RES_Y);
-  SetDefDrawEnv(&screen.draw[1], 0, 0, SCREEN_RES_X, SCREEN_RES_Y);
-
-  // Set the back/drawing buffer
-  screen.draw[0].isbg = 1;
-  screen.draw[1].isbg = 1;
-
-  // Set the background clear color
-  setRGB0(&screen.draw[0], 63, 0, 127); // dark purple
-  setRGB0(&screen.draw[1], 63, 0, 127); // dark purple
-
-  // Set the current buffer
-  currentBuff = 0;
-  PutDispEnv(&screen.disp[currentBuff]);
-  PutDrawEnv(&screen.draw[currentBuff]);
-
-  // Initialize and setup the GTE geometry offsets
-  InitGeom();
-  SetGeomOffset(SCREEN_CENTER_X, SCREEN_CENTER_Y);
-  SetGeomScreen(SCREEN_CENTER_X);
-
-  // Enable Display
-  SetDispMask(SCREEN_Z);
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// Draw the current frame using the ordering table
-///////////////////////////////////////////////////////////////////////////////////////////////////
-void DisplayFrame(void) {
-  // Controls the vsync of the display
-  DrawSync(0);
-  VSync(0);
-
-  PutDispEnv(&screen.disp[currentBuff]);
-  PutDrawEnv(&screen.draw[currentBuff]);
-
-  // Draw the ordering table for the current buffer
-  DrawOTag(GetOTAt(currentBuff, OT_LENGTH - 1));
-
-  // Swaps the buffers
-  currentBuff = !currentBuff;
-
-  // Reset next primitive pointer to the start of the primitive buffer
-  ResetNextPrim(currentBuff);
-}
-
 void Setup(void) {
   ScreenInit();
 
@@ -154,7 +96,7 @@ void Setup(void) {
   JoyPadInit();
 
   // Reset next primitive pointer to the start of the primitive buffer
-  ResetNextPrim(currentBuff);
+  ResetNextPrim(GetCurrentBuffer());
 }
 
 void Update(void) {
@@ -162,7 +104,7 @@ void Update(void) {
   long otz, p, flg;
 
   // Empty the ordering table
-  EmptyOT(currentBuff);
+  EmptyOT(GetCurrentBuffer());
 
   JoyPadUpdate();
   if (JoyPadCheck(PAD1_LEFT)) {
@@ -235,7 +177,7 @@ void Update(void) {
     // backface culling or normal clipping is a technique where we only render faces that are towards the camera.
     // we will discard rendering triangles that are not facing the camera
       if ((otz > 0) && (otz < OT_LENGTH)) {
-        addPrim(GetOTAt(currentBuff, otz), polyg4);
+        addPrim(GetOTAt(GetCurrentBuffer(), otz), polyg4);
         IncrementNextPrim(sizeof(POLY_G4));
       }
     }
@@ -260,12 +202,13 @@ void Update(void) {
     if (nclip <= 0)
       continue;
     if ((otz > 0) && (otz < OT_LENGTH)) {
-      addPrim(GetOTAt(currentBuff, otz), polyf3);
+      addPrim(GetOTAt(GetCurrentBuffer(), otz), polyf3);
       IncrementNextPrim(sizeof(POLY_F3));
     }
   };
 }
 
+// Render function will call the DisplayFrame logic
 void Render(void) {
   DisplayFrame();
 }

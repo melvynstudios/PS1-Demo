@@ -1,6 +1,8 @@
 #include "display.h"
 #include "globals.h"
 #include "libgpu.h"
+#include <libetc.h>
+
 
 static DoubleBuffer screen;
 static u_short currentBuffer;
@@ -38,7 +40,7 @@ void ScreenInit(void) {
 
   // Enable Display
   SetDispMask(1);
-}
+};
 
 ////////////////////////////////////////////////////////////
 // Draw the current frame primitives in the ordering table
@@ -60,4 +62,4 @@ void DisplayFrame(void) {
 
   // Reset next primitive pointer to the start of the primitive buffer
   ResetNextPrim(currentBuffer);
-}
+};
