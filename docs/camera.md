@@ -32,3 +32,9 @@ The `Camera Transformation` is a stage of the graphics pipeline that transforms 
 `world space` is positioning the 3d model in the world.
 `camera space` rotate and translate objects to align with the camera.
 `clip space` is culled so we only render objects that are in the camera's field of view
+
+### Camera Models
+
+Just a visual aid to understand the different camera types.  Look at is a camera that has a fixed point that it is looking at.
+
+[Camera Models](images/camera_modes.png)
