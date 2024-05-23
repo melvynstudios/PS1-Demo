@@ -38,3 +38,16 @@ The `Camera Transformation` is a stage of the graphics pipeline that transforms 
 Just a visual aid to understand the different camera types.  Look at is a camera that has a fixed point that it is looking at.
 
 [Camera Models](images/camera_modes.png)
+
+### Look-at Transformation
+
+The most popular way of creating the view matrix is using a camera LookAt() function.  This returns a matrix that can be used to multiply the vertices to convert them to camera/view space.
+
+Camera will have a position and an orientation.  Then we have an eye point for the camera and a target point.
+
+We need to do two important transformations:
+
+1. Translating the whole scene inversely from the camera eye position to the origin (matrix M<sub>T</sub>).
+2. Rotating the scene with th ereverse orientation (matrix M<sub>R</sub>), so that the camera is positioned at the origin and facing the positive z-axis.
+
+M<sub>view</sub> = M<sub>R</sub> * M<sub>T</sub> = 
