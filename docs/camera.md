@@ -71,3 +71,11 @@ right<sub>x</sub> | up<sub>x</sub> | forward<sub>x</sub>
 right<sub>y</sub> | up<sub>y</sub> | forward<sub>y</sub>
 right<sub>z</sub> | up<sub>z</sub> | forward<sub>z</sub>
 0 | 0 | 0
+
+In `C` we will have a function that will handle this for us called LookAt()
+
+```c
+void LookAt(Camera *camers, Vector *eye, Vector *target, Vector *up) {
+	// Code goes here.
+}
+```
