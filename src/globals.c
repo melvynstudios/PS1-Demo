@@ -3,8 +3,8 @@
 #include <sys/types.h>
 
 static u_long ot[2][OT_LENGTH];                // Ordering table holding pointers to sorted primitives
-static char primbuff[2][PRIMBUFF_LENGTH];       // Primitive buffer that holds the actual data for each primitive
-static char *nextprim; // Pointer to the next primitive buffer
+static char primbuff[2][PRIMBUFF_LENGTH];      // Primitive buffer that holds the actual data for each primitive
+static char *nextprim;                         // Pointer to the next primitive buffer
 
 void EmptyOT(u_short cbuff) { ClearOTagR(ot[cbuff], OT_LENGTH); }
 

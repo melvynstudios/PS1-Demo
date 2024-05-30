@@ -50,4 +50,24 @@ We need to do two important transformations:
 1. Translating the whole scene inversely from the camera eye position to the origin (matrix M<sub>T</sub>).
 2. Rotating the scene with th ereverse orientation (matrix M<sub>R</sub>), so that the camera is positioned at the origin and facing the positive z-axis.
 
-M<sub>view</sub> = M<sub>R</sub> * M<sub>T</sub> = 
+M<sub>view</sub> = M<sub>R</sub> * M<sub>T</sub> =
+
+
+**NOTE**: I'll have to revisit this since there are some math concepts that are new to me.
+
+We basically need to take the world matrix and then we use the vectors of the camera and multiply it to the world matrix.
+
+#### Camera Translation
+
+We simply inversely move the camera position to the origin.  We can replace the translation column of the matrix M<sub>T</sub> by the negated eye position.
+
+#### Rotation
+
+For the rotation we must compute the forward(z), right(x), and up(y) vectors.  These three vectors (x, y, z) are used to construct the rotation matrix M<sub>R</sub>
+
+M<sub>R</sub> | Matrix | Data
+--- | --- | ---
+right<sub>x</sub> | up<sub>x</sub> | forward<sub>x</sub>
+right<sub>y</sub> | up<sub>y</sub> | forward<sub>y</sub>
+right<sub>z</sub> | up<sub>z</sub> | forward<sub>z</sub>
+0 | 0 | 0
