@@ -76,6 +76,23 @@ In `C` we will have a function that will handle this for us called LookAt()
 
 ```c
 void LookAt(Camera *camers, Vector *eye, Vector *target, Vector *up) {
-	// Code goes here.
+	VECTOR xright;   // right (x) vector
+	VECTOR yup;      // up (y) vector
+	VECTOR zforward; // forward (z) vector
+
+	VECTOR x, y, z;  // normalized right/up/forward vectors
+
+	VECTOR pos;      // camera position
+	VECTOR t;        // target position
+
+	// Compute the forward vector and normalize it
+	zforward.vx = target->vx - eye->vx;
+	zforward.vy = target->vy - eye->vy;
+	zforward.vz = target->vz - eye->vz;
+	VectorNormal(&zforward, &z);
+
+	// Compute the right vector and normalize it
+	VectorCross(&z, &up, &xright);
+	VectorNormal(&xright, &x);
 }
 ```
